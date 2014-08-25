@@ -1,0 +1,114 @@
+<<<<<<< HEAD
+@import "keyframes";
+
+=======
+>>>>>>> 9685e2091abe70e44f8d10aaef78b6036f3c7dda
+//angular
+.animate-r {
+	&.ng-move, &.ng-enter, .ng-leave {
+		-webkit-transition:all linear 0.5s;
+		transition:all linear 0.5s;
+	}
+
+  &.ng-leave.ng-leave-active,
+  &.ng-move,
+  &.ng-enter {
+		opacity:0;
+	}
+
+  &.ng-leave,
+  &.ng-move.ng-move-active,
+  &.ng-enter.ng-enter-active {
+		opacity:1;
+	}
+}
+
+.animate-sh {
+	&.ng-hide-add.ng-hide-add-active,
+	&.ng-hide-remove.ng-hide-remove-active {
+	  -webkit-transition:all linear 0.5s;
+	  transition:all linear 0.5s;
+	}
+
+	&.ng-hide {
+	  opacity:0;
+	}
+}
+
+.animate-if {
+	&.ng-enter, &.ng-leave {
+	  -webkit-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
+	  transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
+	}
+
+	&.ng-enter,
+	&.ng-leave.ng-leave-active {
+	  opacity:0;
+	}
+
+	&.ng-leave,
+	&.ng-enter.ng-enter-active {
+	  opacity:1;
+	}
+}
+
+//other
+<<<<<<< HEAD
+.flipIn {
+  backface-visibility: visible;
+  animation: flipIn .7s;
+  -webkit-animation: flipIn .7s;
+  -ms-animation: flipIn .7s;
+}
+
+.flipOut {
+  backface-visibility: visible;
+  animation: flipOut .7s;
+  -webkit-animation: flipOut .7s;
+  -ms-animation: flipOut .7s;
+}
+
+.rotateIn {
+  -webkit-animation: rotateIn 1s ease-in-out;
+  -ms-animation: rotateIn 1s ease-in-out;
+  animation: rotateIn 1s ease-in-out;
+}
+=======
+@-webkit-keyframes rotateIn {
+  0% {
+    -webkit-transform: perspective(400px) rotateY(90deg);
+    opacity: 0;
+  }
+  40% {
+    -webkit-transform: perspective(400px) rotateY(-10deg);
+  }
+  70% {
+    -webkit-transform: perspective(400px) rotateY(10deg);
+  }
+  100% {
+    -webkit-transform: rotateY(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes rotateIn {
+   0% {
+     -ms-transform: perspective(400px) rotateY(90deg);
+     transform: perspective(400px) rotateY(90deg);
+     opacity: 0;
+   }
+   40% {
+     -ms-transform: perspective(400px) rotateY(-10deg);
+     transform: perspective(400px) rotateY(-10deg);
+   }
+   70% {
+     -ms-transform: perspective(400px) rotateY(10deg);
+     transform: perspective(400px) rotateY(10deg);
+   }
+   100% {
+     -ms-transform: rotateY(0deg);
+     transform: rotateY(0deg);
+     opacity: 1;
+   }
+ }
+>>>>>>> 9685e2091abe70e44f8d10aaef78b6036f3c7dda

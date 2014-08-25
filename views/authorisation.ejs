@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html data-ng-app="app">
+<head>
+	<title>title</title>
+	<%- include styles.ejs %>
+</head>
+<body>
+	<div data-ng-controller="authorisationController">
+		<form data-ng-submit="authorisation()" name="authorisationForm" novalidate>
+			<p class="" data-ng-if="authorisationError">Login or pass are not correct !</p>
+			<label class="">
+				Login:
+				<input name="login" data-ng-model="authorisationData.login" required />
+			</label>
+			<label class="">
+				Pass:
+				<input name="pass" data-ng-model="authorisationData.pass" required />
+			</label>
+			<label class="">
+				Remember me:
+				<input name="remember" type="checkbox" data-ng-model="authorisationData.remember" />
+			</label>
+			<input type="submit" />
+		</form>
+	</div>
+	<%- include scripts.ejs %>
+</body>
+</html>

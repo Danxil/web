@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html data-ng-app="app">
+<head>
+	<title>title</title>
+	<%- include styles.ejs %>
+</head>
+<body>
+	<div data-ng-controller="registrationController">
+		<form data-ng-submit="newUser()" name="newUserForm" novalidate>
+			<p class="" data-ng-if="newUserSuccess">Success</p>
+			<p class="" data-ng-if="newUserError">Error</p>
+			<label>
+				<span>Login: </span>
+				<input name="login" data-ng-model="newUserData.login" />
+			</label>
+			<label>
+				<span>Pass: </span>
+				<input name="pass" data-ng-model="newUserData.pass" />
+			<label>
+			<input type="submit" />
+		</form>
+	</div>
+	<%- include scripts.ejs %>
+</body>
+</html>

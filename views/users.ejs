@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html data-ng-app="app">
+<head>
+	<title>title</title>
+	<%- include styles.ejs %>
+</head>
+<body>
+	<div class="wrapper" data-ng-controller="usersController">
+		<ul class="">
+			<li class="" data-ng-repeat="user in users">
+				<p class=""><span class="bold">Login:</span> {{user.login}}</p>
+				<p class=""><span class="bold">Group:</span> {{user.group}}</p>
+				<input type="button" value="Add to admins" data-ng-if="user.group == 1" data-ng-click="addToAdmin($index)" />
+				<input type="button" value="Remove from admins" data-ng-if="user.group == 0" data-ng-click="removeFromAdmin($index)" />
+			</li>
+		</ul>
+	</div>
+	<%- include scripts.ejs %>
+</body>
+</html>

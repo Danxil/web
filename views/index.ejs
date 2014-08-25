@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html data-ng-app="app">
+<head>
+	<title>title</title>
+	<%- include styles.ejs %>
+</head>
+<body>
+	<div class="wrapper main js__preloadPage" style="display: none;" data-ng-controller="mainController">
+        <div class="header text-center js__main">
+            <div class="container">
+                <div class="logo color-1">
+                    <a class="link" href="">
+                        <img class="img" src="images/logo.png" alt="">
+                    </a>
+                    <h1 class="title light"><span class="color-2">Разработка</span> сайтов, поддержка и развитие</h1>
+                    <h1 class="title light">Сделать заказ:</h1>
+                </div>
+                <form class="contact form-inline" data-ng-submit="sendOrder()" name="orderForm" novalidate>
+                    <div class="input-wrapper form-group">
+                        <input class="input form-control input-lg" data-ng-model="clientContact" name="clientContact" placeholder="Ваш телефон, либо E-mail" required>
+                        <span class="error-hint fs-24">!</span>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-lg btn-default btn-block" data-ng-class="{disabled: orderProcess}">Отправить</button>
+                    </div>
+                </form>
+                <video class="bg-video" loop="1" preload="1" autoplay>
+                    <source src="https://brokerage-static.s3.amazonaws.com/assets/marketing/video/RobinhoodHomepageVideoLoop.mp4">
+                    <source src="https://brokerage-static.s3.amazonaws.com/assets/marketing/video/RobinhoodHomepageVideoLoop.webmhd.webm">
+                    <source src="https://brokerage-static.s3.amazonaws.com/assets/marketing/video/RobinhoodHomepageVideoLoop.ogv">
+                </video>
+                <a class="projects-link lead light color-1 underline-none js__nav-link" data-nav-link="projects" href="">Примеры работ</a>
+            </div>
+        </div>
+        <div class="projects js__projects" data-check-visibility-page="projects">
+            <div class="menu js__menu">
+                <a class="main-link js__nav-link" data-nav-link="main" href=""></a>
+            </div>
+            <div class="list-wrapper" data-scroll>
+                <ul class="list list-unstyled" data-ng-if="projects" data-check-load-img="250" data-check-load-img-complete="projectsComplete">
+                    <li class="item ng__check-load-img-wrapper" data-ng-repeat="project in projects">
+                        <div class="project">
+                            <div class="face front">
+                                <img class="img" data-ng-repeat="image in project.images" data-ng-src="/files/{{image}}" alt="" />
+                            </div>
+                            <div class="face back">
+                                <div class="text text-center light">
+                                    <p class="title color-1 fs-32">{{project.title}}</p>
+                                    <p class="description color-1  fs-12 uppercase">{{project.description}}</p>
+                                    <a class="link underline-none" data-ng-href="{{project.link}}" target="blank">Просмотр</a>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <img class="loader animate-if" data-ng-if="!projectsComplete" src="images/loading.png" alt="">
+            </div>
+        </div>
+        <div class="order-result ta-c" data-ng-class="{active: orderResult}">
+            <div class="container color-1" data-ng-if="orderSuccess">
+                <h1 class="title light">Спасибо!</h1>
+                <h2 class="title light">В ближайшее время я с <span class="color-2 fw-4">Вами</span> свяжусь!</h2>
+            </div>
+            <div class="container color-1" data-ng-if="orderSuccess === false">
+                <button type="button" class="close" data-ng-click="closeOrderResult();">
+                    <span class="fs-40">×</span>
+                </button>
+                <h1 class="title light">Извините, ошибка на сервере.</h1>
+                <h2 class="title light">
+                    Напишите нам на почту - <span class="color-2 fw-4">danxil@list.ru</span>,
+                    либо позвоните - <span class="color-2 fw-4">099-792-40-42</span>
+                </h2>
+            </div>
+        </div>
+	</div>
+	<%- include scripts.ejs %>
+</body>
+</html>

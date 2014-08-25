@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html data-ng-app="app">
+<head>
+	<title>title</title>
+	<%- include styles.ejs %>
+</head>
+<body>
+	<div class="administration" data-ng-controller="adminController">
+        <div class="user">
+            <p>
+                <span class="bold">Current user:</span>
+                <%= currentUser.login %>
+            </p>
+            <p>
+                <span class="bold">User group:</span>
+                <%= currentUser.group %>
+            </p>
+            <button class="button btn btn-primary" data-ng-click="logout()">logout</button>
+        </div>
+        <button class="button btn btn-primary create" data-ng-click="toggleForm('newProject')" data-toggle="modal">Create project</button>
+        <ul class="projects list-unstyled">
+            <li class="project" data-ng-repeat="project in projects">
+                <p class="">
+                    <span class="bold project__label">Title:</span>
+                    {{project.title}}
+                </p>
+                <p class="">
+                    <span class="bold project__label">Description:</span>
+                    {{project.description}}
+                </p>
+                <p class="">
+                    <span class="bold project__label">Link:</span>
+                    {{project.link}}
+                </p>
+                <div class="">
+                    <span class="bold project__label">Images:</span>
+                    <ul class="project-images list-unstyled">
+                        <li class="project-images__item img-wrapper" data-ng-repeat="image in project.images">
+                            <img class="img" data-ng-src="/files/{{image}}" alt="" />
+                        </li>
+                    </ul>
+                </div>
+                <div class="project-buttons">
+                    <button class="button btn btn-primary" data-ng-click="toggleForm('editProject', {'project': project, '$index': $index})">Edit</button>
+                    <button class="button btn btn-primary" data-ng-click="deleteProject(project._id, $index)">Delete</button>
+                </div>
+            </li>
+        </ul>
+        <div class="modal fade bs__newProjectForm" tabindex="-1" role="dialog" data-toggle-form="newProject">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-ng-click="toggleForm('newProject')">
+                            <span aria-hidden="true">×</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+                        <h4 class="modal-title">New project.</h4>
+                    </div>
+                    <form class="form modal-body form-horizontal" data-ng-submit="createProject()" name="newProjectForm" novalidate>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Title:</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" data-ng-model="newProjectData.title" name="title" required />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Link:</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" data-ng-model="newProjectData.link" name="link" required />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Descriptin:</label>
+                            <div class="col-sm-10">
+                                <textarea class="form-control" data-ng-model="newProjectData.description" name="description" required></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Images:</label>
+                            <div class="col-sm-3 ng__img-preview-wrapper" data-ng-repeat="item in number | fixedNumber:newProjectData.images.length + 1 track by $index" data-ng-hide="$index < newProjectData.images.length && !newProjectData.images[$index].length">
+                                <div class="img-preview" data-ng-hide="$index == newProjectData.images.length">
+                                    <div class="img-wrapper">
+                                        <img class="img ng-image-preview" alt="" />
+                                    </div>
+                                    <input class="button btn btn-xs btn-danger" type="button" value="Delete image" data-ng-click="deleteNewImg(newProjectData.images, $index)" data-ng-if="$index != newProjectData.images.length" />
+                                </div>
+                                <div class="input-file-wrapper btn btn-success" data-ng-hide="newProjectData.images[$index].length" data-ng-if="newProjectData.images[$index].length || $index == newProjectData.images.length">
+                                    <input class="input-file" data-file="newProjectData.images[$index]" type="file" name="image" value="{{newProjectData.images[$index]}}" data-image-preview required />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button class="btn btn-primary">Отправить</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade bs__editProjectForm" tabindex="-1" role="dialog" data-toggle-form="editProject">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-ng-click="toggleForm('editProject')">
+                            <span aria-hidden="true">×</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+                        <h4 class="modal-title">New project.</h4>
+                    </div>
+                    <form class="form modal-body form-horizontal" data-ng-submit="editProject(amendProjectData._id)" name="editProjectForm" novalidate>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Title:</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" data-ng-model="editProjectData.title" name="title" required />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Link:</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" data-ng-model="editProjectData.link" name="link" required />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Descriptin:</label>
+                            <div class="col-sm-10">
+                                <textarea class="form-control"  data-ng-model="editProjectData.description" name="description" required></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Images:</label>
+                            <div class="img-preview col-sm-3" data-ng-repeat="image in amendProjectData.images" data-ng-hide="!image || editProjectData.images.delete.indexOf(image) != -1">
+                                <div class="img-wrapper">
+                                    <img class="img" data-ng-src="/files/{{image}}" alt="" />
+                                </div>
+                                <input class="button btn btn-xs btn-danger" data-ng-click="deleteImage(image)"  type="button" value="delete image" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Add images:</label>
+                            <div class="">
+                                <div class="col-sm-3 ng__img-preview-wrapper" data-ng-repeat="item in number | fixedNumber:editProjectData.images.new.length + 1 track by $index" data-ng-hide="$index < editProjectData.images.new.length && !editProjectData.images.new[$index].length">
+                                    <div class="input-file-wrapper btn btn-success" data-ng-hide="editProjectData.images.new[$index].length" data-ng-if="editProjectData.images.new[$index].length || $index == editProjectData.images.new.length">
+                                        <input class="input-file" data-file="editProjectData.images.new[$index]" type="file" name="image" value="{{editProjectData.images.new[$index]}}" data-image-preview required />
+                                    </div>
+                                    <div class="img-preview" data-ng-hide="$index == editProjectData.images.new.length">
+                                        <div class="img-wrapper">
+                                            <img class="img ng-image-preview" alt="" />
+                                        </div>
+                                        <input class="button btn btn-xs btn-danger" type="button" value="Delete image" data-ng-click="deleteNewImg(editProjectData.images.new, $index)" data-ng-if="$index != editProjectData.images.new.length" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary">Отправить</button>
+                        <input class="" data-ng-repeat="image in editProjectData.images.delete" data-ng-model="image" name="delImage" hidden />
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="overlay" data-ng-if="overlay"></div>
+	</div>
+	<%- include scripts.ejs %>
+</body>
+</html>

@@ -1,0 +1,34 @@
+.animate-r.ng-hide-add,
+.animate-r.ng-hide-remove {
+  -webkit-transition: all linear 0.5s;
+  transition: all linear 0.5s;
+}
+.animate-r.ng-hide-add.ng-hide-add-active,
+.animate-r.ng-hide-remove {
+  opacity: 0;
+}
+.animate-r.ng-hide-add,
+.animate-r.ng-hide-remove.ng-hide-remove-active {
+  opacity: 1;
+}
+.animate-sh.ng-hide-add.ng-hide-add-active,
+.animate-sh.ng-hide-remove.ng-hide-remove-active {
+  -webkit-transition: all linear 0.5s;
+  transition: all linear 0.5s;
+}
+.animate-sh.ng-hide {
+  opacity: 0;
+}
+.animate-if.ng-enter,
+.animate-if.ng-leave {
+  -webkit-transition: all cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s;
+  transition: all cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s;
+}
+.animate-if.ng-enter,
+.animate-if.ng-leave.ng-leave-active {
+  opacity: 0;
+}
+.animate-if.ng-leave,
+.animate-if.ng-enter.ng-enter-active {
+  opacity: 1;
+}
