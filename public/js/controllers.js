@@ -110,11 +110,27 @@ controllers.controller('adminController', ['$scope', '$compile', '$http', '$filt
                 {
                     if ($scope.newProjectData)
                         delete $scope.newProjectData;
-                    else
-                        $scope.newProjectData =
-                        {
-                            images: []
-                        };
+                    else {
+						$scope.newProjectData =
+						{
+							images: [],
+							links: []
+						};
+
+						$scope.linkPhantomWatcher = $scope.$watch('newProjectData.linkPhantom', function (newValue, oldValue) {
+							if (newValue && !oldValue)
+								$scope.newProjectData.links.push(newValue)
+
+							$scope.newProjectData.linkPhantom = '';
+						});
+
+						$scope.linksWatcher = $scope.$watchCollection('newProjectData.links', function (newValue, oldValue) {
+							angular.forEach(newValue, function (value, index) {
+								if (!value)
+									$scope.newProjectData.links.splice(index, 1);
+							});
+						});
+					}
 
                     break;
                 }
@@ -167,6 +183,9 @@ controllers.controller('adminController', ['$scope', '$compile', '$http', '$filt
 					$scope.toggleForm('newProject');
 				});
 			});
+
+			$scope.linkPhantomWatcher();
+			$scope.linksWatcher();
 		};
 
 		$scope.editProject = function(_id)

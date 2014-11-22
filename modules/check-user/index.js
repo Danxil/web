@@ -24,7 +24,7 @@ function checkUser(req, res, next, checkGroup)
 						return next(error);
 					
 					if (!group || checkGroup < group._doc.id)
-						res.redirect('/session');
+						return res.redirect('/session');
 						
 					req.currentUser = user;
 

@@ -13,14 +13,13 @@ var Project = new mongoose.Schema(
 		type: String,
 		maxLength: 1000
 	},
-	link:
+	links:
 	{
-		type: String,
-		maxLength: 1000
+		type: Array
 	},
 	images:
 	{
-		type: Array,
+		type: Array
 	}
 });
 

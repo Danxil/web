@@ -3,6 +3,9 @@ var config = require('../config.js');
 var mongoose = require('mongoose');
 var path = require('path');
 var fs = require('fs-extra');
+var im = require('imagemagick');
+var webshot = require('webshot');
+var vow = require('vow');
 
 require('../models/project');
 
@@ -15,6 +18,38 @@ var IMAGE_EXTENSIONS =
         'gif',
         'png'
     ];
+
+uploadImage = function(file, callback) {
+    im.crop({
+        srcPath: file.path,
+        dstPath: path.join(config.CLOUD, file.name),
+        width: 512,
+        quality: 1
+    }, function(error, stdout, stderr){
+
+        callback(error);
+    });
+}
+
+createScreenshot = function(url, callback) {
+    var options = {
+        screenSize: {
+            width: 1024,
+            height: 1080
+        },
+        quality: 100
+    }
+
+    var shot = {
+        name: Math.random() + '.png'
+    }
+
+    shot.path = path.join(config.TEMP, shot.name + '.png')
+
+    webshot(url, shot.path, options, function(error) {
+        callback(error, shot);
+    });
+}
 
 module.exports =
 {
@@ -50,16 +85,19 @@ module.exports =
 
             var images = data.images;
 
-            images.forEach(function (value)
-            {
-                fs.unlink(path.join(config.CLOUD, value), function ()
+            if (images.length)
+                images.forEach(function (value)
                 {
+                    fs.unlink(value.path, function ()
+                    {
 
                         deleteComplete.push(true);
 
                         checkDeleteComplete();
+                    });
                 });
-            });
+            else
+                checkDeleteComplete();
         });
     },
     post: function (req, res, next) {
@@ -71,61 +109,84 @@ module.exports =
         if (req.body.description)
             project.description = req.body.description;
 
-        if (req.body.link)
-            project.link = req.body.link;
+        if (req.body.links)
+            project.links = req.body.links;
 
-        var images = req.files.image;
+        if (project.links && !Array.isArray(project.links))
+            project.links = [project.links];
 
-        if (images && !Array.isArray(images))
-            images = [images];
+        var attachImages = req.files.image;
+
+        if (attachImages && !Array.isArray(attachImages))
+            attachImages = [attachImages];
 
         project.images = [];
 
-        if (images)
-            for (var i = 0; i < images.length; i++) {
-                if (images[i].truncated || IMAGE_EXTENSIONS.indexOf(images[i].extension) == -1) {
-                    var fileTruncated = true;
+        createShotPromises = [];
 
-                    fs.unlinkSync(images[i].path);
+        if (project.links)
+            project.links.forEach(function(value, index) {
+                var defer = vow.defer();
 
-                    images.splice(i, 1);
+                createShotPromises.push(defer.promise());
 
-                    i--;
-                }
-                else
-                    project.images.push(images[i].name);
+                createScreenshot(value, function(error, shot) {
+                    if (error)
+                        return next(error);
 
-                if (fileTruncated)
-                    res.send(500);
-            }
+                    project.images.push({name: shot.name, path: shot.path});
 
-        project.save(function (error, project) {
-            if (error) {
-                if (images)
-                    images.forEach(function (value, index) {
-                        fs.unlinkSync(value.path);
-                    });
+                    defer.resolve();
+                });
+            });
 
-                return next(error);
-            }
-
-            if (images) {
-                var responseNewImages = [];
-
-                images.forEach(function (value, index) {
-                    fs.move(value.path, path.join(config.CLOUD, value.name), function (error) {
-                        if (error)
-                            return next(error);
-
-                        responseNewImages.push(value.name);
-
-                        if (responseNewImages.length == images.length)
-                            res.send({_id: project._id, images: responseNewImages});
-                    });
+        vow.all(createShotPromises).then(function() {
+            if (attachImages) {
+                attachImages.forEach(function(value, index) {
+                    project.images.push({name: value.name, path: value.path});
                 });
             }
-            else
-                res.send({_id: project._id});
+
+            images = project.images
+
+            project.save(function (error, project) {
+                if (error) {
+                    if (images.length)
+                        images.forEach(function (value, index) {
+                            fs.unlinkSync(value.path);
+                        });
+
+                    return next(error);
+                }
+
+                if (project.images.length) {
+                    var responseNewImages = [];
+                    var uploadImageDefers = []
+
+                    project.images.forEach(function (value, index) {
+                        var defer = vow.defer();
+
+                        uploadImageDefers.push(defer.promise());
+
+                        uploadImage(value, function (error) {
+                            if (error)
+                                return next(error);
+
+                            responseNewImages.push(value);
+
+                            defer.resolve();
+
+                            fs.unlink(value.path);
+                        });
+                    });
+
+                    vow.all(uploadImageDefers).then(function() {
+                        res.send({_id: project._id, images: responseNewImages});
+                    });
+                }
+                else
+                    res.send({_id: project._id});
+            });
         });
     },
     put: function (req, res, next) {
@@ -152,9 +213,7 @@ module.exports =
         var updateObj = {};
 
         editObj.$set.title = data.title ? data.title : '';
-
         editObj.$set.description = data.description ? data.description : '';
-
         editObj.$set.link = data.link ? data.link : '';
 
         if (data.delImages) {
@@ -176,10 +235,10 @@ module.exports =
 
             if (data.delImages)
                 data.delImages.forEach(function (value, index) {
-                    fs.exists(path.join(config.CLOUD, value), function(exists)
+                    fs.exists(value.path, function(exists)
                     {
                         if (exists)
-                            fs.unlinkSync(path.join(config.CLOUD, value));
+                            fs.unlinkSync(value.path);
                     });
                 });
 
@@ -189,23 +248,9 @@ module.exports =
 
                 updateObj.$push.images = {$each: []};
 
-                for (var i = 0; i < data.newImages.length; i++) {
-                    if (data.newImages[i].truncated || IMAGE_EXTENSIONS.indexOf(data.newImages[i].extension) == -1) {
-                        var fileTruncated = true;
-
-                        fs.unlinkSync(data.newImages[i].path);
-
-                        data.newImages.splice(i, 1);
-
-                        i--;
-                    }
-                    else
-                        updateObj.$push.images.$each.push(data.newImages[i].name);
-
-                }
-
-                if (fileTruncated)
-                    return res.send(500);
+                data.newImages.forEach(function (value, index) {
+                    updateObj.$push.images.$each.push(data.newImages[i].name);
+                });
 
                 Project.update({_id: data.id}, updateObj, function (error) {
                     if (error) {
@@ -217,17 +262,28 @@ module.exports =
                     }
 
                     var responseNewImages = [];
+                    var uploadImageDefers = []
 
                     data.newImages.forEach(function (value, index) {
-                        fs.move(value.path, path.join(config.CLOUD, value.name), function (error) {
+                        var defer = vow.defer();
+
+                        uploadImage(value, function (error) {
                             if (error)
                                 return next(error);
 
-                            responseNewImages.push(value.name);
 
-                            if (responseNewImages.length == data.newImages.length)
-                                res.send({newImages: responseNewImages});
+                            responseNewImages.push(value);
+
+                            defer.resolve();
+
+                            fs.unlink(value.path);
                         });
+
+                        uploadImageDefers.push(defer.promise())
+                    });
+
+                    vow.all(uploadImageDefers).then(function(result) {
+                        res.send({newImages: responseNewImages});
                     });
                 });
             }

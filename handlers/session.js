@@ -49,16 +49,16 @@ module.exports =
 									path: '/'
 								});
 								
-								return res.send(200);
+								return res.sendStatus(200);
 							});
 						});
 					}
 					else
-						return res.send(200);
+						return res.sendStatus(200);
 					
 				}
 				else
-					return res.send(401);
+					return res.sendStatus(401);
 		});
 	},
 	delete: function(req, res, next)
@@ -80,11 +80,11 @@ module.exports =
 						
 						res.clearCookie('logintoken');
 						
-						res.send(200);
+						res.sendStatus(200);
 					});
 				}
 				else
-					res.send(200);
+					res.sendStatus(200);
 			});
 	
 	}

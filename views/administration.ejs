@@ -28,15 +28,15 @@
                     <span class="bold project__label">Description:</span>
                     {{project.description}}
                 </p>
-                <p class="">
+                <p class="" data-ng-repeat="item in project.links track by $index">
                     <span class="bold project__label">Link:</span>
-                    {{project.link}}
+                    {{item}}
                 </p>
                 <div class="">
                     <span class="bold project__label">Images:</span>
                     <ul class="project-images list-unstyled">
                         <li class="project-images__item img-wrapper" data-ng-repeat="image in project.images">
-                            <img class="img" data-ng-src="/files/{{image}}" alt="" />
+                            <img class="img" data-ng-src="/files/{{image.name}}" alt="" />
                         </li>
                     </ul>
                 </div>
@@ -63,13 +63,18 @@
                                 <input class="form-control" data-ng-model="newProjectData.title" name="title" required />
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" data-ng-repeat="item in newProjectData.links track by $index">
                             <label class="col-sm-2 control-label">Link:</label>
                             <div class="col-sm-10">
-                                <input class="form-control" data-ng-model="newProjectData.link" name="link" required />
+                                <input class="form-control" data-ng-model="newProjectData.links[$index]" data-focus-me="$last" name="links" required />
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-sm-2 control-label">Link:</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" data-ng-model="newProjectData.linkPhantom" required />
+                            </div>
+                        </div><div class="form-group">
                             <label class="col-sm-2 control-label">Descriptin:</label>
                             <div class="col-sm-10">
                                 <textarea class="form-control" data-ng-model="newProjectData.description" name="description" required></textarea>
