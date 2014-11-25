@@ -36,7 +36,7 @@
                     <span class="bold project__label">Images:</span>
                     <ul class="project-images list-unstyled">
                         <li class="project-images__item img-wrapper" data-ng-repeat="image in project.images">
-                            <img class="img" data-ng-src="/files/{{image.name}}" alt="" />
+                            <img class="img" data-ng-src="/files/{{image}}" alt="" />
                         </li>
                     </ul>
                 </div>
@@ -143,7 +143,7 @@
                             <label class="col-sm-2 control-label">Images:</label>
                             <div class="img-preview col-sm-3" data-ng-repeat="image in amendProjectData.images" data-ng-hide="!image || editProjectData.images.delete.indexOf(image) != -1">
                                 <div class="img-wrapper">
-                                    <img class="img" data-ng-src="/files/{{image.name}}" alt="" />
+                                    <img class="img" data-ng-src="/files/{{image}}" alt="" />
                                 </div>
                                 <input class="button btn btn-xs btn-danger" data-ng-click="deleteImage(image)"  type="button" value="delete image" />
                             </div>
@@ -165,9 +165,9 @@
                             </div>
                         </div>
                         <button class="btn btn-primary">Отправить</button>
-                        <input class="" data-ng-repeat="image in editProjectData.images.delete" data-ng-model="image" name="delImages" hidden />
-                        <input class="" data-ng-repeat="link in editProjectData.links.delete" data-ng-model="link" name="delLinks" hidden />
-                        <input class="" data-ng-repeat="link in editProjectData.links.new" data-ng-model="link" name="newLinks" hidden />
+                        <input class="" data-ng-repeat="image in editProjectData.images.delete track by $index" data-ng-model="image" name="delImages" hidden />
+                        <input class="" data-ng-repeat="link in editProjectData.links.delete track by $index" data-ng-model="link" name="delLinks" hidden />
+                        <input class="" data-ng-repeat="link in editProjectData.links.new track by $index" data-ng-model="link" name="newLinks" hidden />
                     </form>
                 </div>
             </div>

@@ -27,7 +27,7 @@ uploadImage = function(file, callback) {
         quality: 1
     }, function(error, stdout, stderr){
 
-        callback(error, {name: file.name, path: path.join(config.CLOUD, file.name)});
+        callback(error, file.name);
     });
 }
 
@@ -86,7 +86,7 @@ module.exports =
             if (images.length)
                 images.forEach(function (value)
                 {
-                    fs.unlink(value.path, function ()
+                    fs.unlink(value, function ()
                     {
 
                         deleteComplete.push(true);
@@ -155,13 +155,13 @@ module.exports =
                         if (error)
                             return next(error);
 
-                        project.images.push({name: image.name, path: image.path});
+                        project.images.push(image);
 
-                        responseNewImages.push(value);
+                        responseNewImages.push(image);
 
                         defer.resolve();
 
-                        fs.unlink(path.join(config.TEMP, image.name));
+                        fs.unlink(path.join(config.TEMP, image));
                     });
                 });
 
@@ -170,11 +170,6 @@ module.exports =
 
                 project.save(function (error) {
                     if (error) {
-                        if (images.length)
-                            images.forEach(function (value, index) {
-                                fs.unlinkSync(value.path);
-                            });
-
                         return next(error);
                     }
 
@@ -211,15 +206,10 @@ module.exports =
             $set: {}
         };
 
-        var updateObj = {};
+        var updateObj = {}
 
         Project.findOne({_id: data.id}, function (error, project) {
             if (error) {
-                if (data.newImages)
-                    data.newImages.forEach(function (value, index) {
-                        fs.unlinkSync(value.path);
-                    });
-
                 return next(error);
             }
 
@@ -233,20 +223,27 @@ module.exports =
                 editObj.$pullAll.images = data.delImages;
             }
 
+            if (data.newLinks) {
+                if (!updateObj.$push)
+                    updateObj.$push = {};
+
+                updateObj.$push.links = {$each: data.newLinks};
+            }
+
             if (data.delLinks) {
                 if (!editObj.$pullAll)
                     editObj.$pullAll = {};
 
                 editObj.$pullAll.links = data.delLinks;
-
-                data.delLinks.forEach(function (value, index) {
-                    project.images.forEach(function (value2, index) {
-                        if (value2.shotLink && value2.shotLink == value) {
-                            data.delImages.push(value2.name);
-                        }
-                    });
-                });
             }
+
+            if (data.newImages) {
+                if (!updateObj.$push)
+                    updateObj.$push = {};
+
+                updateObj.$push.images = {$each: []};
+            }
+
             createShotPromises = [];
 
             if (data.newLinks)
@@ -269,65 +266,50 @@ module.exports =
 
                 if (data.delImages)
                     data.delImages.forEach(function (value, index) {
-                        fs.exists(value.path, function (exists) {
+                        fs.exists(path.join(config.CLOUD, value), function (exists) {
                             if (exists)
-                                fs.unlinkSync(value.path);
+                                fs.unlinkSync(path.join(config.CLOUD, value));
                         });
                     });
 
-                if (data.newImages) {
-                    if (!updateObj.$push)
-                        updateObj.$push = {};
+                var responseNewImages = [];
+                uploadImageDefers = [];
 
-                    updateObj.$push.images = {$each: []};
+                data.newImages.forEach(function (value, index) {
 
-                    data.newImages.forEach(function (value, index) {
+                    var defer = vow.defer();
 
+                    uploadImage(value, function (error, image) {
+                        if (error)
+                            return next(error);
+
+                        updateObj.$push.images.$each.push(image);
+
+                        responseNewImages.push(image);
+
+                        defer.resolve();
+
+                        fs.unlink(path.join(config.TEMP, image));
                     });
 
-                    project.update(updateObj, function (error) {
-                        if (error) {
-                            data.newImages.forEach(function (value, index) {
-                                fs.unlinkSync(value.path);
-                            });
+                    uploadImageDefers.push(defer.promise())
+                });
 
+                vow.all(uploadImageDefers).then(function (result) {
+                    project.update(editObj, function (error) {
+                        if (error) {
                             return next(error);
                         }
 
-                        var responseNewImages = [];
-                        var uploadImageDefers = [];
+                        project.update(updateObj, function (error) {
+                            if (error) {
+                                return next(error);
+                            }
 
-                        data.newImages.forEach(function (value, index) {
-                            var defer = vow.defer();
-
-                            uploadImage(value, function (error) {
-                                if (error)
-                                    return next(error);
-
-                                updateObj.$push.images.$each.push({name: value.name, path: value.path});
-
-                                responseNewImages.push(value);
-
-                                defer.resolve();
-
-                                fs.unlink(value.path);
-                            });
-
-                            uploadImageDefers.push(defer.promise())
-                        });
-
-                        vow.all(uploadImageDefers).then(function (result) {
-                            project.update(editObj,  function (error, project) {
-                                res.send({newImages: responseNewImages});
-                            });
+                            res.send({newImages: responseNewImages});
                         });
                     });
-                }
-                else
-                    project.update(editObj,  function (error, project) {
-                        res.send(200);
-                    });
-
+                });
             });
         });
     }
