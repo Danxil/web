@@ -150,15 +150,39 @@ controllers.controller('adminController', ['$scope', '$compile', '$http', '$filt
                             {
                                 new: [],
                                 delete: []
-                            }
-                        };
+                            },
+							links:
+							{
+								new: [],
+								delete: []
+							}
+                        }
+
+						$scope.linkPhantomWatcher = $scope.$watch('amendProjectData.linkPhantom', function (newValue, oldValue) {
+							if (newValue && !oldValue)
+								$scope.amendProjectData.links.push(newValue)
+
+							$scope.amendProjectData.linkPhantom = '';
+						});
+
+						$scope.linksWatcher = $scope.$watchCollection('amendProjectData.links', function (newValue, oldValue) {
+							angular.forEach(newValue, function (value, index) {
+								if (!value)
+									$scope.amendProjectData.links.splice(index, 1);
+							});
+						});
 
                         $scope.amendProjectData = data.project;
                         $scope.amendProjectData.$index = data.$index;
 
                         $scope.editProjectData.title = data.project.title;
                         $scope.editProjectData.description = data.project.description;
-                        $scope.editProjectData.link = data.project.link;
+
+						$scope.defaultAmnedLinks = [];
+
+						angular.forEach(data.project.links, function (value, index) {
+							$scope.defaultAmnedLinks.push(value);
+						});
                     }
 
                     break;
@@ -190,13 +214,25 @@ controllers.controller('adminController', ['$scope', '$compile', '$http', '$filt
 
 		$scope.editProject = function(_id)
 		{
+			$scope.linkPhantomWatcher();
+			$scope.linksWatcher();
+
+			angular.forEach($scope.defaultAmnedLinks, function (value, index) {
+				if ($scope.amendProjectData.links.indexOf(value) == -1)
+					$scope.editProjectData.links.delete.push(value);
+			});
+
+			angular.forEach($scope.amendProjectData.links, function (value, index) {
+				if ($scope.defaultAmnedLinks.indexOf(value) == -1)
+					$scope.editProjectData.links.new.push(value);
+			});
+
 			ajaxAPI.put.projects(editProjectForm, _id, function(response)
 			{
 				$scope.$apply(function()
 				{
 					$scope.projects[$scope.amendProjectData.$index].title = $scope.editProjectData.title;
 					$scope.projects[$scope.amendProjectData.$index].description = $scope.editProjectData.description;
-					$scope.projects[$scope.amendProjectData.$index].link = $scope.editProjectData.link;
 
 					if (response.newImages)
 						for (var i = 0; i < response.newImages.length; i++)
@@ -208,6 +244,18 @@ controllers.controller('adminController', ['$scope', '$compile', '$http', '$filt
 
 						for (var i = 0; i < deleteImages.length; i++)
 							$scope.projects[$scope.amendProjectData.$index].images.splice($scope.projects[$scope.amendProjectData.$index].images.indexOf(deleteImages[i]), 1);
+					}
+
+					if (response.newLinks)
+						for (var i = 0; i < response.newImages.length; i++)
+							$scope.projects[$scope.amendProjectData.$index].links.push(response.newLinks[i]);
+
+					if ($scope.editProjectData.links.delete.length)
+					{
+						var deleteLinks = $scope.editProjectData.images.delete;
+
+						for (var i = 0; i < deleteLinks.length; i++)
+							$scope.projects[$scope.amendProjectData.$index].links.splice($scope.projects[$scope.amendProjectData.$index].links.indexOf(deleteLinks[i]), 1);
 					}
 
                     $scope.toggleForm('editProject');
