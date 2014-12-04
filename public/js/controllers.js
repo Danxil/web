@@ -114,7 +114,8 @@ controllers.controller('adminController', ['$scope', '$compile', '$http', '$filt
 						$scope.newProjectData =
 						{
 							images: [],
-							links: []
+							links: [],
+							shots: []
 						};
 
 						$scope.linkPhantomWatcher = $scope.$watch('newProjectData.linkPhantom', function (newValue, oldValue) {
@@ -128,6 +129,20 @@ controllers.controller('adminController', ['$scope', '$compile', '$http', '$filt
 							angular.forEach(newValue, function (value, index) {
 								if (!value)
 									$scope.newProjectData.links.splice(index, 1);
+							});
+						});
+
+						$scope.shotPhantomWatcher = $scope.$watch('newProjectData.shotPhantom', function (newValue, oldValue) {
+							if (newValue && !oldValue)
+								$scope.newProjectData.shots.push(newValue)
+
+							$scope.newProjectData.shotPhantom = '';
+						});
+
+						$scope.shotsWatcher = $scope.$watchCollection('newProjectData.shots', function (newValue, oldValue) {
+							angular.forEach(newValue, function (value, index) {
+								if (!value)
+									$scope.newProjectData.shots.splice(index, 1);
 							});
 						});
 					}
@@ -155,7 +170,8 @@ controllers.controller('adminController', ['$scope', '$compile', '$http', '$filt
 							{
 								new: [],
 								delete: []
-							}
+							},
+							shots: []
                         }
 
 						$scope.linkPhantomWatcher = $scope.$watch('amendProjectData.linkPhantom', function (newValue, oldValue) {
@@ -169,6 +185,20 @@ controllers.controller('adminController', ['$scope', '$compile', '$http', '$filt
 							angular.forEach(newValue, function (value, index) {
 								if (!value)
 									$scope.amendProjectData.links.splice(index, 1);
+							});
+						});
+
+						$scope.shotPhantomWatcher = $scope.$watch('editProjectData.shotPhantom', function (newValue, oldValue) {
+							if (newValue && !oldValue)
+								$scope.editProjectData.shots.push(newValue)
+
+							$scope.editProjectData.shotPhantom = '';
+						});
+
+						$scope.shotsWatcher = $scope.$watchCollection('editProjectData.shots', function (newValue, oldValue) {
+							angular.forEach(newValue, function (value, index) {
+								if (!value)
+									$scope.editProjectData.shots.splice(index, 1);
 							});
 						});
 
@@ -210,12 +240,18 @@ controllers.controller('adminController', ['$scope', '$compile', '$http', '$filt
 
 			$scope.linkPhantomWatcher();
 			$scope.linksWatcher();
+
+			$scope.shotPhantomWatcher();
+			$scope.shotsWatcher();
 		};
 
 		$scope.editProject = function(_id)
 		{
 			$scope.linkPhantomWatcher();
 			$scope.linksWatcher();
+
+			$scope.shotPhantomWatcher();
+			$scope.shotsWatcher();
 
 			angular.forEach($scope.defaultAmnedLinks, function (value, index) {
 				if ($scope.amendProjectData.links.indexOf(value) == -1)

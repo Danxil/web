@@ -4,8 +4,9 @@ var mongoose = require('mongoose');
 var path = require('path');
 var fs = require('fs-extra');
 var im = require('imagemagick');
-var webshot = require('webshot');
+var phantom = require('phantom');
 var vow = require('vow');
+var sizeOf = require('image-size');
 
 require('../models/project');
 
@@ -20,10 +21,19 @@ var IMAGE_EXTENSIONS =
     ];
 
 uploadImage = function(file, callback) {
-    im.crop({
+    var src = path.join(config.TEMP, file.name);
+    var dest = path.join(config.CLOUD, file.name);
+
+    var dimensions = sizeOf(src);
+
+    var resizeWidth = 300
+    var resizeHeight = resizeWidth / dimensions.width * dimensions.height;
+
+    im.resize({
         srcPath: path.join(config.TEMP, file.name),
         dstPath: path.join(config.CLOUD, file.name),
-        width: 512,
+        width: resizeWidth,
+        height: resizeHeight,
         quality: 1
     }, function(error, stdout, stderr){
 
@@ -31,21 +41,32 @@ uploadImage = function(file, callback) {
     });
 }
 
-createScreenshot = function(url, callback) {
-    var options = {
-        screenSize: {
-            width: 1024,
-            height: 1080
-        },
-        quality: 100
-    }
+createScreenshot = function(url, options, callback) {
+    if (!options) options = {};
 
     var shot = {
-        name: Math.random() * 1000000 + '.png'
+        name: parseInt(Math.random() * 1000000) + '.png'
     }
 
-    webshot(url, path.join(config.TEMP, shot.name), options, function(error) {
-        callback(error, shot);
+    var dest = path.join(config.TEMP, shot.name);
+
+    phantom.create(function (ph) {
+        ph.createPage(function (page) {
+            var viewportSize = {};
+
+            viewportSize.width = options.width || 1024;
+            viewportSize.height = options.height || 768;
+
+            page.set('viewportSize', viewportSize);
+
+            page.open(url, function (status) {
+                page.render(dest, function() {
+                    ph.exit();
+
+                    callback(shot);
+                });
+            });
+        });
     });
 }
 
@@ -86,7 +107,7 @@ module.exports =
             if (images.length)
                 images.forEach(function (value)
                 {
-                    fs.unlink(value, function ()
+                    fs.unlink(path.join(config.CLOUD, value), function ()
                     {
 
                         deleteComplete.push(true);
@@ -113,6 +134,13 @@ module.exports =
         if (project.links && !Array.isArray(project.links))
             project.links = [project.links];
 
+        var shots = req.body.shots;
+
+        if (!shots)
+            shots = []
+        else if (!Array.isArray(shots))
+            shots = [shots];
+
         var attachImages = req.files.image;
 
         if (!attachImages)
@@ -120,22 +148,25 @@ module.exports =
         else if (!Array.isArray(attachImages))
             attachImages = [attachImages];
 
+        if (req.body.shotWidth)
+            var shotWidth = req.body.shotWidth;
+
+        if (req.body.shotHeight)
+            var shotHeight = req.body.shotHeight;
+
         project.images = [];
 
         var createShotDefers = [];
 
         var responseNewImages = [];
 
-        if (project.links)
-            project.links.forEach(function(value, index) {
+        if (shots)
+            shots.forEach(function(value, index) {
                 var defer = vow.defer();
 
                 createShotDefers.push(defer.promise());
 
-                createScreenshot(value, function(error, shot) {
-                    if (error)
-                        return next(error);
-
+                createScreenshot(value, {width: shotWidth, height: shotHeight}, function(shot) {
                     attachImages.push(shot);
 
                     defer.resolve();
@@ -201,6 +232,15 @@ module.exports =
         if (data.delLinks && !Array.isArray(data.delLinks))
             data.delLinks = [data.delLinks];
 
+        if (data.newShots && !Array.isArray(data.newShots))
+            data.newShots = [data.newShots];
+
+        if (req.body.shotWidth)
+            var shotWidth = req.body.shotWidth;
+
+        if (req.body.shotHeight)
+            var shotHeight = req.body.shotHeight;
+
         var editObj =
         {
             $set: {}
@@ -246,16 +286,13 @@ module.exports =
 
             createShotPromises = [];
 
-            if (data.newLinks)
-                data.newLinks.forEach(function(value, index) {
+            if (data.newShots)
+                data.newShots.forEach(function(value, index) {
                     var defer = vow.defer();
 
                     createShotPromises.push(defer.promise());
 
-                    createScreenshot(value, function(error, shot) {
-                        if (error)
-                            return next(error);
-
+                    createScreenshot(value, {width: shotWidth, height: shotHeight}, function(shot) {
                         data.newImages.push(shot);
 
                         defer.resolve();
