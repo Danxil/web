@@ -41,7 +41,9 @@
                     <li class="item ng__check-load-img-wrapper" data-ng-repeat="project in projects">
                         <div class="project">
                             <div class="face front">
-                                <img class="img" data-ng-repeat="image in project.images" data-ng-src="/files/{{image}}" alt="" />
+                                <div class="img-wrapper">
+                                    <img class="img" data-ng-repeat="image in project.images" data-ng-src="/files/{{image}}" alt="" />
+                                </div>
                             </div>
                             <div class="face back">
                                 <div class="text text-center light">

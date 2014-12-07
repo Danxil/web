@@ -7,6 +7,7 @@
 
 body {
 	font-family: Open Sans;
+  overflow: hidden;
 }
 
 .input {
@@ -57,8 +58,8 @@ body {
 html,
 body,
 .wrapper {
-	height: 100%;
-	line-height: 1.2;
+  height: 100%;
+  line-height: 1.2;
 }
 
 .wrapper {
@@ -160,7 +161,8 @@ body,
     height: 100%;
     width: 100%;
     padding-right: 73px;
-    position: relative;
+    position: absolute;
+    top: 100%;
 
     .menu {
       position: absolute;
@@ -209,7 +211,12 @@ body,
         -webkit-perspective: 3000px;
         perspective: 3000px;
         position: relative;
+        margin-left: -65px;
 
+        &:first-child {
+          margin-left: 0;
+        }
+        
         &:nth-child(2n) {
           .project .face {
             background: #454343;
@@ -218,9 +225,9 @@ body,
 
         &:hover {
           .project {
-            -webkit-transform: rotateY(180deg);
-            -ms-transform: rotateY(180deg);
-            transform: rotateY(180deg);
+            -webkit-transform: rotateY(215deg);
+            -ms-transform: rotateY(215deg);
+            transform: rotateY(215deg);
 
             .front {
               //z-index: 0;
@@ -241,6 +248,10 @@ body,
           -webkit-transform-style: preserve-3d;
           -ms-transform-style: preserve-3d;
           transform-style: preserve-3d;
+          -webkit-transform: rotateY(35deg);
+          -ms-transform: rotateY(35deg);
+          transform: rotateY(35deg);
+          margin-left: -25px;
 
           .face {
             -webkit-backface-visibility: hidden;
@@ -258,7 +269,9 @@ body,
             position: relative;
             //z-index: 500;
             overflow: hidden;
-            padding: 50px 0;
+            -webkit-box-shadow: -33px 0 13px -24px rgba(26,26,26,0.4);
+            -moz-box-shadow:    -33px 0 13px -24px rgba(26,26,26,0.4);
+            box-shadow:         -33px 0 13px -24px rgba(26,26,26,0.4);
           }
 
           .back {
@@ -270,17 +283,24 @@ body,
             top: 0;
             background: #1D1A21 !important;
             display: table;
+            -webkit-box-shadow: -33px 0 13px -24px rgba(26,26,26,0.4);
+            -moz-box-shadow:    -33px 0 13px -24px rgba(26,26,26,0.4);
+            box-shadow:         -33px 0 13px -24px rgba(26,26,26,0.4);
+          }
+
+          .img-wrapper {
+            overflow: hidden;
+            height: 100%;
           }
 
           .img {
-            width: 250px;
+            width: 350px;
             background: #fff;
             display: block;
-            margin: 50px auto;
+            margin: auto;
             -webkit-box-shadow: 0px 0px 6px 0px rgba(50, 50, 50, 1);
             -moz-box-shadow:    0px 0px 6px 0px rgba(50, 50, 50, 1);
             box-shadow:         0px 0px 6px 0px rgba(50, 50, 50, 1);
-            border: 1px solid rgba(0, 0, 0, 0.75);
 
             &:first-child {
               margin-top: 0;

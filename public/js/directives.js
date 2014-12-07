@@ -112,9 +112,9 @@ directives.directive('navLink', function()
             {
                 case 'main':
                 {
-                    $('body, html').animate(
+                    $('.wrapper').animate(
                     {
-                        scrollTop: 0
+                        top: 0
                     });
 
                     break;
@@ -124,14 +124,16 @@ directives.directive('navLink', function()
                 {
                     var offsetTop = $('.js__projects').offset().top;
 
-                    $('body, html').animate(
+                    $('.wrapper').animate(
                     {
-                        scrollTop: offsetTop
+                        top: -offsetTop
                     });
 
                     break;
                 }
             }
+
+            $scope.clickMenuLink(page);
         });
     }
 });
