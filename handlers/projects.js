@@ -73,7 +73,7 @@ createScreenshot = function(url, options, callback) {
 module.exports =
 {
     get: function (req, res, next) {
-        Project.find(function (error, projects) {
+        Project.find().sort({order: 1}).exec(function (error, projects) {
             if (error)
                 return next(error);
 
@@ -121,6 +121,9 @@ module.exports =
     },
     post: function (req, res, next) {
         var project = new Project();
+
+        if (req.body.order)
+            project.order= req.body.order;
 
         if (req.body.title)
             project.title = req.body.title;
@@ -255,6 +258,9 @@ module.exports =
 
             editObj.$set.title = data.title ? data.title : '';
             editObj.$set.description = data.description ? data.description : '';
+
+            if (data.order)
+                editObj.$set.order = data.order
 
             if (data.delImages) {
                 if (!editObj.$pullAll)

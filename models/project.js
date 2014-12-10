@@ -2,6 +2,10 @@ var mongoose = require('mongoose');
 
 var Project = new mongoose.Schema(
 {
+	order:
+	{
+		type: Number
+	},
 	title: 
 	{
 		type: String,

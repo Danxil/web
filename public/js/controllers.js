@@ -205,6 +205,7 @@ controllers.controller('adminController', ['$scope', '$compile', '$http', '$filt
                         $scope.amendProjectData = data.project;
                         $scope.amendProjectData.$index = data.$index;
 
+						$scope.editProjectData.order = data.project.order;
                         $scope.editProjectData.title = data.project.title;
                         $scope.editProjectData.description = data.project.description;
 
