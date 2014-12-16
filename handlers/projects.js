@@ -26,7 +26,7 @@ uploadImage = function(file, callback) {
 
     var dimensions = sizeOf(src);
 
-    var resizeWidth = 300
+    var resizeWidth = 500
     var resizeHeight = resizeWidth / dimensions.width * dimensions.height;
 
     im.resize({
@@ -122,9 +122,6 @@ module.exports =
     post: function (req, res, next) {
         var project = new Project();
 
-        if (req.body.order)
-            project.order= req.body.order;
-
         if (req.body.title)
             project.title = req.body.title;
 
@@ -159,15 +156,29 @@ module.exports =
 
         project.images = [];
 
-        var createShotDefers = [];
+        var promises1 = [];
+        var promises2 = [];
 
         var responseNewImages = [];
+
+        var defer = vow.defer();
+
+        promises2.push(defer.promise());
+
+        Project.find().sort({order: -1}).limit(1).exec(function (error, projects) {
+            if (error)
+                return next(error);
+
+            project.order = projects[0].order + 1;
+
+            defer.resolve();
+        });
 
         if (shots)
             shots.forEach(function(value, index) {
                 var defer = vow.defer();
 
-                createShotDefers.push(defer.promise());
+                promises1.push(defer.promise());
 
                 createScreenshot(value, {width: shotWidth, height: shotHeight}, function(shot) {
                     attachImages.push(shot);
@@ -176,14 +187,12 @@ module.exports =
                 });
             });
 
-        vow.all(createShotDefers).then(function() {
-            var attachImagesPromises = [];
-
+        vow.all(promises1).then(function() {
             if (attachImages.length)
                 attachImages.forEach(function (value, index) {
                     var defer = vow.defer();
 
-                    attachImagesPromises.push(defer.promise());
+                    promises2.push(defer.promise());
 
                     uploadImage(value, function (error, image) {
                         if (error)
@@ -199,7 +208,7 @@ module.exports =
                     });
                 });
 
-            vow.all(attachImagesPromises).then(function() {
+            vow.all(promises2).then(function() {
                 images = project.images
 
                 project.save(function (error) {
@@ -259,9 +268,6 @@ module.exports =
             editObj.$set.title = data.title ? data.title : '';
             editObj.$set.description = data.description ? data.description : '';
 
-            if (data.order)
-                editObj.$set.order = data.order
-
             if (data.delImages) {
                 if (!editObj.$pullAll)
                     editObj.$pullAll = {};
@@ -290,13 +296,48 @@ module.exports =
                 updateObj.$push.images = {$each: []};
             }
 
-            createShotPromises = [];
+            var promises1 = [];
+            var promises2 = [];
+
+            if (data.order && data.order != project.order) {
+                var skip = data.order < project.order ? data.order - 1 : project.order - 1
+                var limit = Math.abs(data.order - project.order) + 1
+
+                var defer = vow.defer();
+
+                promises2.push(defer.promise());
+
+                Project.find().sort({order: 1}).skip(skip).limit(limit).exec(function (error, projects) {
+                    if (error)
+                        return next(error);
+
+                    defer.resolve();
+
+                    projects.forEach(function(value, index) {
+                        if (value.id != project.id)
+                            var newOrder = data.order < project.order ? value.order + 1 : value.order - 1
+                        else
+                            var newOrder = data.order
+
+                        var defer = vow.defer();
+
+                        promises2.push(defer.promise());
+
+                        value.update({$set: {order: newOrder}}).exec(function (error, projects) {
+                            if (error)
+                                return next(error)
+
+                            defer.resolve();
+                        });
+                    });
+                });
+            }
 
             if (data.newShots)
                 data.newShots.forEach(function(value, index) {
                     var defer = vow.defer();
 
-                    createShotPromises.push(defer.promise());
+                    promises1.push(defer.promise());
 
                     createScreenshot(value, {width: shotWidth, height: shotHeight}, function(shot) {
                         data.newImages.push(shot);
@@ -305,7 +346,7 @@ module.exports =
                     });
                 });
 
-            vow.all(createShotPromises).then(function() {
+            vow.all(promises1).then(function() {
 
                 if (data.delImages)
                     data.delImages.forEach(function (value, index) {
@@ -316,7 +357,6 @@ module.exports =
                     });
 
                 var responseNewImages = [];
-                uploadImageDefers = [];
 
                 data.newImages.forEach(function (value, index) {
 
@@ -335,10 +375,10 @@ module.exports =
                         fs.unlink(path.join(config.TEMP, image));
                     });
 
-                    uploadImageDefers.push(defer.promise())
+                    promises2.push(defer.promise())
                 });
 
-                vow.all(uploadImageDefers).then(function (result) {
+                vow.all(promises2).then(function (result) {
                     project.update(editObj, function (error) {
                         if (error) {
                             return next(error);
