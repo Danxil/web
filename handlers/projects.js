@@ -26,18 +26,37 @@ uploadImage = function(file, callback) {
 
     var dimensions = sizeOf(src);
 
-    var resizeWidth = 500
+    var resizeWidth = 500;
     var resizeHeight = resizeWidth / dimensions.width * dimensions.height;
 
     im.resize({
         srcPath: path.join(config.TEMP, file.name),
-        dstPath: path.join(config.CLOUD, file.name),
+        dstPath: path.join(config.TEMP, file.name),
         width: resizeWidth,
         height: resizeHeight,
         quality: 1
-    }, function(error, stdout, stderr){
+    }, function(error, stdout, stderr) {
+        if (error)
+            return next(error);
 
-        callback(error, file.name);
+        var dimensions = sizeOf(src);
+
+        var croupHeight = dimensions.height < 1080 ? dimensions.height : 1080;
+
+
+        im.crop({
+            srcPath: path.join(config.TEMP, file.name),
+            dstPath: path.join(config.CLOUD, file.name),
+            width: resizeWidth,
+            height: croupHeight,
+            gravity: 'North',
+            quality: 1
+        }, function(error, stdout, stderr) {
+            if (error)
+                return next(error);
+
+            callback(error, file.name);
+        });
     });
 }
 

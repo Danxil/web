@@ -1,1 +1,25 @@
 <link rel="stylesheet" type="text/css" href="css/styles.css">
+<style>
+    @-moz-document url-prefix() {
+        .wrapper .projects .list .item {
+        }
+
+        .wrapper .projects .list .item .project {
+            transition: .5s;
+        }
+
+        .wrapper .projects .list .item:hover .project {
+            transform: rotateY(180deg);
+            transition: .5s;
+        }
+
+        .wrapper .projects .list .item.prev-hover {
+             transform: none;
+        }
+
+
+        .wrapper .projects .list .item.next-hover {
+             transform: none;
+        }
+    }
+</style>

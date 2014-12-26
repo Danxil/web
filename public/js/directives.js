@@ -308,3 +308,21 @@ directives.directive('focusMe', function($timeout) {
         }
     };
 });
+
+directives.directive('hover', function($timeout) {
+    return {
+        scope: { trigger: '=focusMe' },
+        link: function(scope, elem) {
+            elem = $(elem[0]);
+
+            elem.mouseenter(function(){
+                elem.prev().addClass('prev-hover');
+                elem.next().addClass('next-hover');
+            });
+
+            elem.mouseleave(function(){
+                elem.siblings().removeClass('prev-hover next-hover');
+            });
+        }
+    };
+});
