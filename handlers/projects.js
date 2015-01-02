@@ -31,7 +31,7 @@ uploadImage = function(file, callback) {
 
     im.resize({
         srcPath: path.join(config.TEMP, file.name),
-        dstPath: path.join(config.TEMP, file.name),
+        dstPath: path.join(config.CLOUD, file.name),
         width: resizeWidth,
         height: resizeHeight,
         quality: 1
@@ -39,24 +39,7 @@ uploadImage = function(file, callback) {
         if (error)
             return next(error);
 
-        var dimensions = sizeOf(src);
-
-        var croupHeight = dimensions.height < 1080 ? dimensions.height : 1080;
-
-
-        im.crop({
-            srcPath: path.join(config.TEMP, file.name),
-            dstPath: path.join(config.CLOUD, file.name),
-            width: resizeWidth,
-            height: croupHeight,
-            gravity: 'North',
-            quality: 1
-        }, function(error, stdout, stderr) {
-            if (error)
-                return next(error);
-
-            callback(error, file.name);
-        });
+        callback(error, file.name);
     });
 }
 

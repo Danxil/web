@@ -218,10 +218,9 @@ directives.directive('checkLoadImg', function($timeout, $interval)
             var imgComplete = [];
 
             img.each(function()
-            {console.log('1');
+            {
                 $(this).load(function()
                 {
-                    console.log('b' + img.length);
                     check(img, wrapper, imgComplete, interval);
                 });
 

@@ -118,6 +118,110 @@
     -ms-transform: perspective(400px) rotate3d(1, 0, 0, -90deg);
   }
 }
+@keyframes bounceInLeft {
+  0%,
+  60%,
+  75%,
+  90%,
+  100% {
+    transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+  0% {
+    opacity: 0;
+    transform: translate3d(-3000px, 0, 0);
+  }
+  60% {
+    opacity: 1;
+    transform: translate3d(25px, 0, 0);
+  }
+  75% {
+    transform: translate3d(-10px, 0, 0);
+  }
+  90% {
+    transform: translate3d(5px, 0, 0);
+  }
+  100% {
+    transform: none;
+  }
+}
+@keyframes bounceInDown {
+  0%,
+  60%,
+  75%,
+  90%,
+  100% {
+    transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -3000px, 0);
+  }
+  60% {
+    opacity: 1;
+    transform: translate3d(0, 25px, 0);
+  }
+  75% {
+    transform: translate3d(0, -10px, 0);
+  }
+  90% {
+    transform: translate3d(0, 5px, 0);
+  }
+  100% {
+    transform: none;
+  }
+}
+@keyframes bounceInUp {
+  0%,
+  60%,
+  75%,
+  90%,
+  100% {
+    transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 3000px, 0);
+  }
+  60% {
+    opacity: 1;
+    transform: translate3d(0, -20px, 0);
+  }
+  75% {
+    transform: translate3d(0, 10px, 0);
+  }
+  90% {
+    transform: translate3d(0, -5px, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+@keyframes bounceInRight {
+  0%,
+  60%,
+  75%,
+  90%,
+  100% {
+    transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+  0% {
+    opacity: 0;
+    transform: translate3d(3000px, 0, 0);
+  }
+  60% {
+    opacity: 1;
+    transform: translate3d(-25px, 0, 0);
+  }
+  75% {
+    transform: translate3d(10px, 0, 0);
+  }
+  90% {
+    transform: translate3d(-5px, 0, 0);
+  }
+  100% {
+    transform: none;
+  }
+}
 .animate-r.ng-move,
 .animate-r.ng-enter,
 .animate-r .ng-leave {
@@ -173,4 +277,26 @@
   animation: rotateIn 1s ease-in-out;
   -webkit-perspective: 3000px;
   perspective: 3000px;
+}
+.bounceInLeft {
+  animation-name: bounceInLeft;
+}
+.bounceInDown {
+  animation-name: bounceInDown;
+}
+.bounceInUp {
+  animation-name: bounceInUp;
+}
+.bounceInRight {
+  animation-name: bounceInRight;
+}
+.animated {
+  animation-duration: 1s;
+  animation-fill-mode: both;
+}
+.animated.infinite {
+  animation-iteration-count: infinite;
+}
+.animated.hinge {
+  animation-duration: 2s;
 }
