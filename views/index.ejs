@@ -2,11 +2,12 @@
 <html data-ng-app="app">
 <head>
 	<title>title</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
 	<%- include styles.ejs %>
 </head>
 <body>
-	<div class="wrapper main js__preloadPage" style="display: none;" data-ng-controller="mainController">
-        <div class="header text-center js__main">
+	<div class="wrapper js__preloadPage" style="display: none;" data-ng-controller="mainController">
+        <div class="header main text-center js__main">
             <div class="container content">
                 <div class="logo color-1 bounceInDown animated">
                     <a class="link" href="">
@@ -26,11 +27,13 @@
                         <button class="btn btn-lg btn-default btn-block" data-ng-class="{disabled: orderProcess}">Отправить</button>
                     </div>
                 </form>
-                <video class="bg-video" loop="1" preload="1" autoplay>
-                    <source src="https://brokerage-static.s3.amazonaws.com/assets/marketing/video/RobinhoodHomepageVideoLoop.mp4">
-                    <source src="https://brokerage-static.s3.amazonaws.com/assets/marketing/video/RobinhoodHomepageVideoLoop.webmhd.webm">
-                    <source src="https://brokerage-static.s3.amazonaws.com/assets/marketing/video/RobinhoodHomepageVideoLoop.ogv">
-                </video>
+                <div class="bg-video-wrapper">
+                    <video class="bg-video" loop="1" preload="1" autoplay>
+                        <source src="https://brokerage-static.s3.amazonaws.com/assets/marketing/video/RobinhoodHomepageVideoLoop.mp4">
+                        <source src="https://brokerage-static.s3.amazonaws.com/assets/marketing/video/RobinhoodHomepageVideoLoop.webmhd.webm">
+                        <source src="https://brokerage-static.s3.amazonaws.com/assets/marketing/video/RobinhoodHomepageVideoLoop.ogv">
+                    </video>
+                </div>
                 <a class="projects-link lead light color-1 underline-none js__nav-link bounceInRight animated" data-nav-link="projects" href="">Портфолио</a>
             </div>
         </div>

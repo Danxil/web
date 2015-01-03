@@ -101,6 +101,8 @@ directives.directive('navLink', function()
 {
     return function ($scope, elem, attrs)
     {
+        $('.main').on('touchmove',  function(e) {e.preventDefault(); console.log(11);});
+
         $(elem[0]).click(function(event)
         {
             event.preventDefault();

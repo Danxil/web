@@ -6,7 +6,7 @@
 @import "../js/system/lightbox/css/lightbox.css";
 
 body {
-	font-family: Open Sans;
+  font-family: Open Sans;
   overflow: hidden;
 }
 
@@ -72,14 +72,20 @@ body,
     transititon: .5s;
     -webkit-transition: .5s;
 
-
-    .bg-video {
+    .bg-video-wrapper {
+      overflow: hidden;
       position: absolute;
-      min-height: 100%;
-      min-width: 100%;
       top: 0;
       left: 0;
+      right: 0;
+      height: 100%;
       z-index: -1;
+      overflow: hidden;
+    }
+
+    .bg-video {
+      min-height: 100%;
+      min-width: 100%;
     }
 
     .link {
@@ -452,3 +458,5 @@ body,
     }
   }
 }
+
+@import "responsive";

@@ -44,6 +44,9 @@ controllers.controller('mainController', ['$scope', '$compile', '$http', '$filte
 
 				case 'projects':
                 {
+					if ($scope.projects)
+						return;
+
                     ajaxAPI.get.projects($http, function(response)
                     {
                         $scope.projects = response.projects;
