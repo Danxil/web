@@ -101,7 +101,6 @@ directives.directive('navLink', function()
 {
     return function ($scope, elem, attrs)
     {
-        $('.main').on('touchmove',  function(e) {e.preventDefault(); console.log(11);});
 
         $(elem[0]).click(function(event)
         {
@@ -114,9 +113,9 @@ directives.directive('navLink', function()
             {
                 case 'main':
                 {
-                    $('.wrapper').animate(
+                    $('body, html').animate(
                     {
-                        top: 0
+                        scrollTop: 0
                     });
 
                     break;
@@ -126,9 +125,9 @@ directives.directive('navLink', function()
                 {
                     var offsetTop = $('.js__projects').offset().top;
 
-                    $('.wrapper').animate(
+                    $('body, html').animate(
                     {
-                        top: -offsetTop
+                        scrollTop: offsetTop
                     });
 
                     break;
@@ -327,3 +326,24 @@ directives.directive('hover', function($timeout) {
         }
     };
 });
+
+directives.directive('animateHeight', function($timeout) {
+    return {
+        link: function(scope, elem) {
+            elem = $(elem[0]);
+
+            var lastHeight = $(window).height()
+
+            $(window).resize(function() {
+                var currentHeight = $(window).height();
+
+                $('html, body').animate({
+                    scrollTop: $('html, body').scrollTop()
+                });
+
+                var lastHeight = $(window).height()
+            });
+        }
+    };
+});
+

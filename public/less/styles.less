@@ -7,7 +7,6 @@
 
 body {
   font-family: Open Sans;
-  overflow: hidden;
 }
 
 .input {
@@ -56,14 +55,19 @@ body {
 }
 
 html,
-body,
-.wrapper {
+body {
   height: 100%;
   line-height: 1.2;
+  transition: .5s;
+}
+
+body {
+  //overflow: hidden;
 }
 
 .wrapper {
   position: relative;
+  height: 100%;
 
   .header {
     height: 100%;
@@ -141,7 +145,7 @@ body,
       margin-top: 75px;
       display: inline-block;
       position: relative;
-      left: -43px;
+      left: -21px;
 
       &:hover {
         &:after {

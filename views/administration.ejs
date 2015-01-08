@@ -35,8 +35,8 @@
                 <div class="">
                     <span class="bold project__label">Images:</span>
                     <ul class="project-images list-unstyled">
-                        <li class="project-images__item img-wrapper" data-ng-repeat="image in project.images">
-                            <img class="img" data-ng-src="/files/{{image}}" alt="" />
+                        <li class="project-images__item img-wrapper" data-ng-repeat="image in project.images track by $index">
+                            <img class="img" data-ng-src="{{image}}" alt="" />
                         </li>
                     </ul>
                 </div>
@@ -201,9 +201,9 @@
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Images:</label>
-                            <div class="img-preview col-sm-3" data-ng-repeat="image in amendProjectData.images" data-ng-hide="!image || editProjectData.images.delete.indexOf(image) != -1">
+                            <div class="img-preview col-sm-3" data-ng-repeat="image in amendProjectData.images track by $index" data-ng-hide="!image || editProjectData.images.delete.indexOf(image) != -1">
                                 <div class="img-wrapper">
-                                    <img class="img" data-ng-src="/files/{{image}}" alt="" />
+                                    <img class="img" data-ng-src="{{image}}" alt="" />
                                 </div>
                                 <input class="button btn btn-xs btn-danger" data-ng-click="deleteImage(image)"  type="button" value="delete image" />
                             </div>

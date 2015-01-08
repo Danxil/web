@@ -2,56 +2,46 @@
   body {
     overflow: auto;
   }
-
-  h1, .h1 {
+  h1,
+  .h1 {
     font-size: 35px;
   }
-
   .wrapper .projects .list {
     overflow-x: auto;
     overflow-y: hidden;
   }
 }
-
 @media (max-width: 800px) {
   .wrapper .header .content {
     margin-top: 50px;
   }
-
   .wrapper .header .link .img {
     height: 50px;
   }
-
   .wrapper .projects .list .item .project {
     width: 350px;
   }
 }
-
 @media (max-width: 500px) {
-  h1, .h1 {
+  h1,
+  .h1 {
     font-size: 30px;
   }
-
   .wrapper .header .contact {
     margin-top: 50px;
   }
-
   .wrapper .header .projects-link {
     margin-top: 50px;
   }
-
   .wrapper .projects .list .item .project {
     width: 280px;
   }
-
   .wrapper .projects .menu .main-link {
     padding: 5px;
   }
-
   .wrapper .projects {
     padding-right: 53px;
   }
-
   .wrapper .header .contact .input {
     min-width: 0;
   }

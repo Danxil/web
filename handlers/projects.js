@@ -3,44 +3,83 @@ var config = require('../config.js');
 var mongoose = require('mongoose');
 var path = require('path');
 var fs = require('fs-extra');
-var im = require('imagemagick');
 var phantom = require('phantom');
 var vow = require('vow');
 var sizeOf = require('image-size');
+var cloudinary = require('cloudinary');
+var im = require('imagemagick');
+
+cloudinary.config({
+    cloud_name: 'hvwthfvq6',
+    api_key: '737989479753773',
+    api_secret: '11mHeIlk5ntEdPtKqsXP-MxLq0s'
+});
 
 require('../models/project');
 
 var Project = mongoose.model('Project');
 
-var IMAGE_EXTENSIONS =
-    [
-        'jpeg',
-        'jpg',
-        'gif',
-        'png'
-    ];
+uploadImage = function(image, callback) {
+    if (!image)
+        return;
 
-uploadImage = function(file, callback) {
-    var src = path.join(config.TEMP, file.name);
-    var dest = path.join(config.CLOUD, file.name);
+    var dimensions = sizeOf(image);
 
-    var dimensions = sizeOf(src);
+    var limitWidth = 500;
+    var limitHeight = 1080;
 
-    var resizeWidth = 500;
-    var resizeHeight = resizeWidth / dimensions.width * dimensions.height;
+    var k = 500 / dimensions.width;
 
-    im.resize({
-        srcPath: path.join(config.TEMP, file.name),
-        dstPath: path.join(config.CLOUD, file.name),
-        width: resizeWidth,
-        height: resizeHeight,
-        quality: 1
-    }, function(error, stdout, stderr) {
-        if (error)
-            return next(error);
+    var defer = vow.defer();
 
-        callback(error, file.name);
+    if (dimensions.height * k > limitHeight)
+        im.crop({
+            srcPath: image,
+            dstPath: image,
+            width: dimensions.width,
+            height: limitHeight / k,
+            gravity: 'North',
+            quality: 1
+        }, function(error, stdout, stderr) {
+            if (error)
+                return next(error);
+
+            defer.resolve();
+        });
+    else
+        defer.resolve();
+
+    defer.promise().then(function() {
+        cloudinary.uploader.upload(image,
+            function(result) {
+                callback(result.error, {src: image, dst: result.url});
+            },
+            {
+                width: limitWidth,
+                gravity: 'north',
+                format: 'jpg',
+                quality: 100,
+                crop: 'limit'
+            });
     });
+}
+
+deleteImage = function(image, callback) {
+    if (!image)
+        return callback();
+
+    if (!callback)
+        callback = function(){};
+
+    arr = image.split('/');
+    arr = arr[arr.length - 1].split('.')[0];
+
+    arr = [arr];
+
+    cloudinary.api.delete_resources(arr,
+        function(result) {
+            callback();
+        });
 }
 
 createScreenshot = function(url, options, callback) {
@@ -109,9 +148,7 @@ module.exports =
             if (images.length)
                 images.forEach(function (value)
                 {
-                    fs.unlink(path.join(config.CLOUD, value), function ()
-                    {
-
+                    deleteImage(value, function () {
                         deleteComplete.push(true);
 
                         checkDeleteComplete();
@@ -171,7 +208,7 @@ module.exports =
             if (error)
                 return next(error);
 
-            project.order = projects[0].order + 1;
+            project.order = projects.length ? projects[0].order + 1 : 0;
 
             defer.resolve();
         });
@@ -196,17 +233,17 @@ module.exports =
 
                     promises2.push(defer.promise());
 
-                    uploadImage(value, function (error, image) {
+                    uploadImage(path.join(config.TEMP, value.name), function (error, result) {
+                        fs.unlink(result.src);
+
                         if (error)
                             return next(error);
 
-                        project.images.push(image);
+                        project.images.push(result.dst);
 
-                        responseNewImages.push(image);
+                        responseNewImages.push(result.dst);
 
                         defer.resolve();
-
-                        fs.unlink(path.join(config.TEMP, image));
                     });
                 });
 
@@ -352,9 +389,12 @@ module.exports =
 
                 if (data.delImages)
                     data.delImages.forEach(function (value, index) {
-                        fs.exists(path.join(config.CLOUD, value), function (exists) {
-                            if (exists)
-                                fs.unlinkSync(path.join(config.CLOUD, value));
+                        var defer = vow.defer();
+
+                        promises2.push(defer.promise());
+
+                        deleteImage(value, function() {
+                            defer.resolve();
                         });
                     });
 
@@ -364,20 +404,20 @@ module.exports =
 
                     var defer = vow.defer();
 
-                    uploadImage(value, function (error, image) {
+                    uploadImage(path.join(config.TEMP, value.name), function (error, result) {
+                        fs.unlink(result.src);
+
                         if (error)
                             return next(error);
 
-                        updateObj.$push.images.$each.push(image);
+                        updateObj.$push.images.$each.push(result.dst);
 
-                        responseNewImages.push(image);
+                        responseNewImages.push(result.dst);
 
                         defer.resolve();
-
-                        fs.unlink(path.join(config.TEMP, image));
                     });
 
-                    promises2.push(defer.promise())
+                    promises2.push(defer.promise());
                 });
 
                 vow.all(promises2).then(function (result) {
