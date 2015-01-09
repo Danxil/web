@@ -1,6 +1,11 @@
-@media (max-width: 1023px) {
+@media (max-width: 1024px) {
   body {
     overflow: auto;
+  }
+
+  .wrapper,
+  .page {
+    min-height: 768px;
   }
 
   h1, .h1 {
@@ -10,6 +15,14 @@
   .wrapper .projects .list {
     overflow-x: auto;
     overflow-y: hidden;
+  }
+
+  .wrapper .header .bg-video-wrapper {
+    background: url(https://limg.imgsmail.ru/splash/v/i/logo.v5.png.4a60795b82bda3baee8b89cb7829b5a22335555c.png);
+
+    .bg-video {
+      display: none;
+    }
   }
 }
 
@@ -30,6 +43,11 @@
 @media (max-width: 500px) {
   h1, .h1 {
     font-size: 30px;
+  }
+
+  .wrapper,
+  .page {
+    min-height: 640px;
   }
 
   .wrapper .header .contact {
@@ -54,5 +72,9 @@
 
   .wrapper .header .contact .input {
     min-width: 0;
+  }
+
+  .wrapper .order-result {
+    padding-top: 50px;
   }
 }

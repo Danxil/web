@@ -111,7 +111,7 @@ directives.directive('navLink', function()
 
             switch (page)
             {
-                case 'main':
+                case 'header':
                 {
                     $('body, html').animate(
                     {

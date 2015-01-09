@@ -7,7 +7,7 @@
 </head>
 <body>
 	<div class="wrapper js__preloadPage" style="display: none;" data-ng-controller="mainController">
-        <div class="header main text-center js__main" data-page>
+        <div class="header page text-center js__main" data-page>
             <div class="container content">
                 <div class="logo color-1 bounceInDown animated">
                     <a class="link" href="">
@@ -29,17 +29,17 @@
                 </form>
                 <a class="projects-link lead light color-1 underline-none js__nav-link bounceInRight animated" data-nav-link="projects" href="">Портфолио</a>
                 <div class="bg-video-wrapper">
-                    <video class="bg-video" loop="1" preload="1" autoplay>
-                        <source src="https://brokerage-static.s3.amazonaws.com/assets/marketing/video/RobinhoodHomepageVideoLoop.mp4">
-                        <source src="https://brokerage-static.s3.amazonaws.com/assets/marketing/video/RobinhoodHomepageVideoLoop.webmhd.webm">
-                        <source src="https://brokerage-static.s3.amazonaws.com/assets/marketing/video/RobinhoodHomepageVideoLoop.ogv">
+                    <video class="bg-video" loop="1" preload="1" autoplay preload>
+                        <source src="https://brokerage-static.s3.amazonaws.com/assets/marketing/video/RobinhoodHomepageVideoLoop.mp4" type="video/mp4">
+                        <source src="https://brokerage-static.s3.amazonaws.com/assets/marketing/video/RobinhoodHomepageVideoLoop.webmhd.webm" type="video/ogg">
+                        <source src="https://brokerage-static.s3.amazonaws.com/assets/marketing/video/RobinhoodHomepageVideoLoop.ogv" type="video/webm">
                     </video>
                 </div>
             </div>
         </div>
-        <div class="projects js__projects" data-check-visibility-page="projects" data-page>
+        <div class="projects page js__projects" data-check-visibility-page="projects" data-page>
             <div class="menu js__menu">
-                <a class="main-link js__nav-link" data-nav-link="main" href=""></a>
+                <a class="main-link js__nav-link" data-nav-link="header" href=""></a>
             </div>
             <div class="list-wrapper" data-scroll>
                 <ul class="list list-unstyled" data-ng-if="projects" data-check-load-img="250" data-check-load-img-complete="projectsComplete">
@@ -48,7 +48,7 @@
                             <div class="project">
                                 <div class="face front">
                                     <div class="img-wrapper">
-                                        <img class="img" data-ng-repeat="image in project.images track by" data-ng-src="{{image}}" alt="" />
+                                        <img class="img" data-ng-repeat="image in project.images track by $index" data-ng-src="{{image}}" alt="" />
                                     </div>
                                 </div>
                                 <div class="face back">
@@ -77,10 +77,10 @@
                 <button type="button" class="close" data-ng-click="closeOrderResult();">
                     <span class="fs-40">×</span>
                 </button>
-                <h1 class="title light">Извините, ошибка на сервере.</h1>
+                <h1 class="title light">Извините, отправка невозможна.</h1>
                 <h2 class="title light">
-                    Напишите нам на почту - <span class="color-2 fw-4">danxil@list.ru</span>,
-                    либо позвоните - <span class="color-2 fw-4">099-792-40-42</span>
+                    Напишите мне на почту - <span class="color-2 fw-4">danxil@list.ru</span>,
+                    либо скайп - <span class="color-2 fw-4">danxil.bon</span>
                 </h2>
             </div>
         </div>
