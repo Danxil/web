@@ -9,25 +9,30 @@
 	<div class="wrapper js__preloadPage" style="display: none;" data-ng-controller="mainController">
         <div class="header page text-center js__main" data-page>
             <div class="container content">
+                <ul class="locale-switch list-inline">
+                    <li class="item" data-ng-repeat="item in locales">
+                        <a class="link lead light color-1 underline-none" data-ng-class="{active: location.pathname == item.link}" data-ng-href="{{location.pathname != item.link && item.link || ''}}">{{item.name}}</a>
+                    </li>
+                </ul>
                 <div class="logo color-1 bounceInDown animated">
                     <a class="link" href="">
                         <img class="img" src="images/logo.png" alt="">
                     </a>
                     <h1 class="title light">
-                        Разработка <span class="color-2">сайтов и веб-приложений</span>
+                        <%- __('Development of web sites and applications') %>
                     </h1>
-                    <h1 class="title light">Сделать заказ:</h1>
+                    <h1 class="title light"><%- __('To order') %>:</h1>
                 </div>
                 <form class="contact form-inline bounceInLeft animated" data-ng-submit="sendOrder()" name="orderForm" novalidate>
                     <div class="input-wrapper form-group">
-                        <input class="input form-control input-lg" data-ng-model="clientContact" name="clientContact" placeholder="Ваш телефон, либо E-mail" required>
+                        <input class="input form-control input-lg" data-ng-model="clientContact" name="clientContact" placeholder="<%- __('Your skype, or E-mail') %>" required>
                         <span class="error-hint fs-24">!</span>
                     </div>
                     <div class="form-group">
-                        <button class="btn btn-lg btn-default btn-block" data-ng-class="{disabled: orderProcess}">Отправить</button>
+                        <button class="btn btn-lg btn-default btn-block" data-ng-class="{disabled: orderProcess}"><%- __('Send') %></button>
                     </div>
                 </form>
-                <a class="projects-link lead light color-1 underline-none js__nav-link bounceInRight animated" data-nav-link="projects" href="">Портфолио</a>
+                <a class="projects-link lead light color-1 underline-none js__nav-link bounceInRight animated" data-nav-link="projects" href=""><%- __('Portfolio') %></a>
                 <div class="bg-video-wrapper">
                     <video class="bg-video" loop="1" preload="1" autoplay preload>
                         <source src="https://brokerage-static.s3.amazonaws.com/assets/marketing/video/RobinhoodHomepageVideoLoop.mp4" type="video/mp4">
@@ -55,9 +60,9 @@
                                     <div class="text text-center light">
                                         <p class="title color-1 fs-32">{{project.title}}</p>
                                         <p class="description color-1  fs-12 uppercase">{{project.description}}</p>
-                                        <a class="link underline-none" data-ng-href="{{project.links[0]}}" data-ng-if="project.links.length != 0" target="blank">Перейти</a>
+                                        <a class="link underline-none" data-ng-href="{{project.links[0]}}" data-ng-if="project.links.length != 0" target="blank"><%- __('Review') %></a>
                                         <div data-ng-if="project.links.length == 0">
-                                            <a class="link underline-none" data-ng-repeat="image in project.images track by $index" data-ng-href="{{image}}" data-lightbox="{{project._id}}" data-ng-hide="$index != 0">Просмотр скриншотов</a>
+                                            <a class="link underline-none" data-ng-repeat="image in project.images track by $index" data-ng-href="{{image}}" data-lightbox="{{project._id}}" data-ng-hide="$index != 0"><%- __('View screenshots') %></a>
                                         </div>
                                     </div>
                                 </div>
@@ -70,17 +75,16 @@
         </div>
         <div class="order-result ta-c" data-ng-class="{active: orderResult}">
             <div class="container color-1" data-ng-if="orderSuccess">
-                <h1 class="title light">Спасибо!</h1>
-                <h2 class="title light">В ближайшее время я с <span class="color-2 fw-4">Вами</span> свяжусь!</h2>
+                <h1 class="title light"><%- __('Thank') %>!</h1>
+                <h2 class="title light"><%- __('In the near future I will contact you') %></h2>
             </div>
             <div class="container color-1" data-ng-if="orderSuccess === false">
                 <button type="button" class="close" data-ng-click="closeOrderResult();">
                     <span class="fs-40">×</span>
                 </button>
-                <h1 class="title light">Извините, отправка невозможна.</h1>
+                <h1 class="title light"><%- __('Sorry, not sent') %></h1>
                 <h2 class="title light">
-                    Напишите мне на почту - <span class="color-2 fw-4">danxil@list.ru</span>,
-                    либо скайп - <span class="color-2 fw-4">danxil.bon</span>
+                    <%- __('Write me an email - {{email}}, or skype - {{skype}}', {email: 'danxil@list.ру', skype: 'danxil.bon'}) %>
                 </h2>
             </div>
         </div>

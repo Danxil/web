@@ -14,10 +14,17 @@ var routes = require('./routes/index');
 var methodOverride = require('method-override');
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
+var i18n = require("i18n");
 
 var debug = require('debug')('node_test');
 
 mongoose.connect(config.DB);
+
+i18n.configure({
+    locales: ['ru', 'en'],
+    cookie: 'locale',
+    directory: __dirname + '/locales'
+});
 
 var sessinStore = new MongoStore(
 {
@@ -29,6 +36,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.set('view engine', 'ejs');
 
+app.use(i18n.init);
 app.use(session(
 {
 	secret: 'ololo',

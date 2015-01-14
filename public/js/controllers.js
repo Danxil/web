@@ -25,8 +25,6 @@ controllers.controller('mainController', ['$scope', '$compile', '$http', '$filte
             $scope.orderForm.clientContact.$setUntouched();
         }
 
-		$scope.domElements = {};
-
 		$scope.clickMenuLink = function(page)
 		{
 			if ($scope.pageActive == page)
@@ -91,6 +89,10 @@ controllers.controller('mainController', ['$scope', '$compile', '$http', '$filte
         {
             delete $scope.orderResult;
         };
+
+		$scope.domElements = {};
+
+		$scope.locales = [{link: '/en', name: 'En'}, {link: '/ru', name: 'Ru'}];
 	}
 ]);
 

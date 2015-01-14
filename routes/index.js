@@ -13,7 +13,31 @@ var orderHandlers = require('../handlers/order');
 
 var router = express.Router();
 
-router.get('/', homeHandlers.get);
+router.get('/', function(req, res, next) {
+    var locale = req.cookies.locale;
+
+    if (locale)
+        res.redirect('/' + locale);
+    else
+        res.redirect('/en');
+});
+
+router.get('/en', function(req, res, next) {
+    res.cookie('locale', 'en');
+
+    req.setLocale('en');
+
+    homeHandlers.get(req, res, next);
+});
+
+router.get('/ru', function(req, res, next) {
+    res.cookie('locale', 'ru');
+
+    req.setLocale('ru');
+
+    homeHandlers.get(req, res, next);
+});
+
 
 router.get('/administration', checkUser.admin, administrationHandlers.get);
 

@@ -1,0 +1,13 @@
+{
+	"Development of web sites and applications": "Development of <span class=\"color-2\">web sites and applications</span>",
+	"Your skype, or E-mail": "Your skype, or E-mail",
+	"To order": "To order",
+	"Send": "Send",
+	"Portfolio": "Portfolio",
+	"Review": "Review",
+	"Thank": "Thank",
+	"In the near future I will contact you": "In the near future I will contact <span class=\"color-2 fw-4\">you</span>",
+	"Sorry, not sent": "Sorry, not sent",
+	"Write me an email - {{email}}, or skype - {{skype}}": "Write me an email - <span class=\"color-2 fw-4\">{{email}}</span>, or skype - <span class=\"color-2 fw-4\">{{skype}}</span>",
+	"View screenshots": "View screenshots"
+}

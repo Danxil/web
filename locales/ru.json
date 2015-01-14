@@ -1,0 +1,13 @@
+{
+	"Development of web sites and applications": "Разработка <span class=\"color-2\">сайтов и веб-приложений</span>",
+	"Your skype, or E-mail": "Ваш skype, либо E-mail",
+	"To order": "Сделать заказ",
+	"Send": "Отправить",
+	"Portfolio": "Портфолио",
+	"Review": "Перейти",
+	"Thank": "Спасибо",
+	"In the near future I will contact you": "В ближайшее время я с <span class=\"color-2 fw-4\">вами</span> свяжусь",
+	"Sorry, not sent": "Извините, невозможно отправить",
+	"Write me an email - {{email}}, or skype - {{skype}}": "Напишите мне на email - <span class=\"color-2 fw-4\">{{email}}</span>, или skype - <span class=\"color-2 fw-4\">{{skype}}</span>",
+	"View screenshots": "Просмотр скриншотов"
+}
