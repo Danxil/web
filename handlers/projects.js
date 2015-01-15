@@ -26,7 +26,7 @@ uploadImage = function(image, callback) {
     var dimensions = sizeOf(image);
 
     var limitWidth = 500;
-    var limitHeight = 1080;
+    var limitHeight = 1200;
 
     var k = 500 / dimensions.width;
 
@@ -109,6 +109,55 @@ createScreenshot = function(url, options, callback) {
             });
         });
     });
+}
+
+setProjectOrder = function(set, project, promises) {
+    if (set && set != project.order) {
+        if (set <= 0) set = 1
+
+        if (project.order) {
+            var skip = set < project.order ? set - 1 : project.order - 1;
+            var limit = Math.abs(set - project.order) + 1;
+        } else {
+            var skip = 0;
+            var limit = null;
+
+            var newProject = true;
+        }
+
+        var defer = vow.defer();
+
+        promises.push(defer.promise());
+
+        Project.find().sort({order: 1}).skip(skip).limit(limit).exec(function(error, projects) {
+            if (error)
+                return;
+
+            defer.resolve();
+
+            projects.forEach(function(value, index) {
+                if (value.id != project.id && !newProject)
+                    var newOrder = set < project.order ? value.order + 1 : value.order - 1;
+                else if (value.id == project.id)
+                    var newOrder = set;
+                else
+                    var newOrder = value.order + 1;
+
+                var defer = vow.defer();
+
+                promises.push(defer.promise());
+
+                value.update({$set: {order: newOrder}}).exec(function (error, projects) {
+                    if (error)
+                        return next(error)
+
+                    defer.resolve();
+                });
+            });
+
+            project.order = set;
+        });
+    }
 }
 
 module.exports =
@@ -200,18 +249,7 @@ module.exports =
 
         var responseNewImages = [];
 
-        var defer = vow.defer();
-
-        promises2.push(defer.promise());
-
-        Project.find().sort({order: -1}).limit(1).exec(function (error, projects) {
-            if (error)
-                return next(error);
-
-            project.order = projects.length ? projects[0].order + 1 : 0;
-
-            defer.resolve();
-        });
+        setProjectOrder(1, project, promises2);
 
         if (shots)
             shots.forEach(function(value, index) {
@@ -338,39 +376,7 @@ module.exports =
             var promises1 = [];
             var promises2 = [];
 
-            if (data.order && data.order != project.order) {
-                var skip = data.order < project.order ? data.order - 1 : project.order - 1
-                var limit = Math.abs(data.order - project.order) + 1
-
-                var defer = vow.defer();
-
-                promises2.push(defer.promise());
-
-                Project.find().sort({order: 1}).skip(skip).limit(limit).exec(function (error, projects) {
-                    if (error)
-                        return next(error);
-
-                    defer.resolve();
-
-                    projects.forEach(function(value, index) {
-                        if (value.id != project.id)
-                            var newOrder = data.order < project.order ? value.order + 1 : value.order - 1
-                        else
-                            var newOrder = data.order
-
-                        var defer = vow.defer();
-
-                        promises2.push(defer.promise());
-
-                        value.update({$set: {order: newOrder}}).exec(function (error, projects) {
-                            if (error)
-                                return next(error)
-
-                            defer.resolve();
-                        });
-                    });
-                });
-            }
+            setProjectOrder(data.order, project, promises2);
 
             if (data.newShots)
                 data.newShots.forEach(function(value, index) {

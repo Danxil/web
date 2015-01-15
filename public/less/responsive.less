@@ -78,3 +78,36 @@
     padding-top: 50px;
   }
 }
+
+@media (max-width: 400px) {
+  .wrapper .projects .list .item {
+    margin-left: 0;
+  }
+
+  .wrapper .projects .list .item .project {
+    width: 100%;
+    transform: rotateY(0deg);
+    margin-left: 0;
+  }
+
+  .wrapper .projects .list .item .project .back {
+    padding: 0 10px;
+
+    .text {
+      line-height: 1.5;
+    }
+  }
+
+  .wrapper .projects .list .item:hover .project {
+    transform: rotateY(180deg);
+    transition: .5s;
+  }
+
+  .wrapper .projects .list .item.prev-hover {
+    transform: none;
+  }
+
+  .wrapper .projects .list .item.next-hover {
+    transform: none;
+  }
+}
