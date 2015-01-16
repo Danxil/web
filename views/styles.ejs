@@ -9,8 +9,7 @@
         }
 
         .wrapper .projects .list .item:hover .project {
-            transform: rotateY(180deg);
-            transition: .5s;
+            transform: rotateY(0deg);
         }
 
         .wrapper .projects .list .item.prev-hover {
@@ -21,5 +20,29 @@
         .wrapper .projects .list .item.next-hover {
              transform: none;
         }
-    }
+
+        .wrapper .projects .list .item {
+            margin-left: 0;
+        }
+
+        .wrapper .projects .list .item .project {
+            transform: rotateY(0deg);
+            margin-left: 0;
+        }
+
+        .wrapper .projects .list .item .project .front {
+            box-shadow: none;
+        }
+
+        .wrapper .projects .list .item .project .back {
+            padding: 0 10px;
+            box-shadow: none;
+            transform: rotateY(0deg) translate(0, -100%);
+            transition: .5s;
+        }
+
+        .wrapper .projects .list .item:hover .project .back {
+            transform: rotateY(0deg) translate(0, 0%);
+            background: rgba(29, 26, 33, 0.99) !important;
+        }
 </style>
