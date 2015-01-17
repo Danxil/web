@@ -1,7 +1,11 @@
 {
-  "name": "node_test",
+  "name": "portfolio_web",
   "version": "0.0.1",
   "main": "bin/www",
+  "engines": {
+    "node": "0.10.33",
+    "npm": "2.1.18"
+  },
   "dependencies": {
     "body-parser": "^1.5.2",
     "cloudinary": "~1.1.1",
