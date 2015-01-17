@@ -28,8 +28,6 @@ module.exports =
 		};
 		
 		transporter.sendMail(mailOptions, function(error, info){
-			console.log(error);
-
 			if(error)
 				return next(error);
 			else
