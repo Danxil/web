@@ -30,8 +30,8 @@ module.exports =
 		transporter.sendMail(mailOptions, function(error, info){
 			if(error)
 				return next(error);
-			else
-				res.send(200);
+		else
+			res.send(200);
 		});
 	}
 }

@@ -35,9 +35,7 @@
                 <a class="projects-link lead light color-1 underline-none js__nav-link bounceInRight animated" data-nav-link="projects" href=""><%- __('Portfolio') %></a>
                 <div class="bg-video-wrapper">
                     <video class="bg-video" loop="1" preload="1" autoplay preload>
-                        <source src="https://brokerage-static.s3.amazonaws.com/assets/marketing/video/RobinhoodHomepageVideoLoop.mp4" type="video/mp4">
-                        <source src="https://brokerage-static.s3.amazonaws.com/assets/marketing/video/RobinhoodHomepageVideoLoop.webmhd.webm" type="video/ogg">
-                        <source src="https://brokerage-static.s3.amazonaws.com/assets/marketing/video/RobinhoodHomepageVideoLoop.ogv" type="video/webm">
+                        <source data-ng-src="{{item.url}}" type="{{item.type}}" data-ng-repeat="item in bgVideo">
                     </video>
                 </div>
             </div>

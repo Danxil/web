@@ -2,9 +2,8 @@
 
 var controllers = angular.module('controllers', []);
 
-controllers.controller('mainController', ['$scope', '$compile', '$http', '$filter', '$timeout',
-	function ($scope, $compile, $http, $filter, $timeout)
-	{
+controllers.controller('mainController', ['$scope', '$compile', '$http', '$filter', '$timeout', '$window', '$sce',
+	function ($scope, $compile, $http, $filter, $timeout, $window, $sce) {
         function orderResult(autoclose)
         {
             if (autoclose == undefined)
@@ -93,6 +92,22 @@ controllers.controller('mainController', ['$scope', '$compile', '$http', '$filte
 		$scope.domElements = {};
 
 		$scope.locales = [{link: '/en', name: 'En'}, {link: '/ru', name: 'Ru'}];
+
+		if ($window.innerWidth > 1024)
+			$scope.bgVideo = [
+				{
+					url: $sce.trustAsResourceUrl('https://brokerage-static.s3.amazonaws.com/assets/marketing/video/RobinhoodHomepageVideoLoop.mp4'),
+					type: 'video/mp4'
+				},
+				{
+					url: $sce.trustAsResourceUrl('https://brokerage-static.s3.amazonaws.com/assets/marketing/video/RobinhoodHomepageVideoLoop.webmhd.webm'),
+					type: 'video/webm'
+				},
+				{
+					url: $sce.trustAsResourceUrl('https://brokerage-static.s3.amazonaws.com/assets/marketing/video/RobinhoodHomepageVideoLoop.ogv'),
+					type: 'video/ogg'
+				}
+			];
 	}
 ]);
 
