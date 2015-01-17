@@ -5,7 +5,7 @@ var transporter = mailer.createTransport({
     service: 'Gmail',
     auth: {
         user: 'danxilggggaa@gmail.com',
-        pass: '7d1cE3a7'
+        pass: '7d1cE3a6'
     }
 });
 
@@ -29,7 +29,7 @@ module.exports =
 		
 		transporter.sendMail(mailOptions, function(error, info){
 			console.log(error);
-			
+
 			if(error)
 				return next(error);
 			else
