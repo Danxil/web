@@ -327,13 +327,25 @@ body {
           .img-wrapper {
             overflow: hidden;
             height: 100%;
+            position: relative;
+
+            &:after {
+              content: '';
+              display: block;
+              box-shadow: inset 0 -85px 80px -37px rgba(69, 67, 67, 0.8);
+              position: absolute;
+              top: 0;
+              bottom: 0;
+              left: 0;
+              right: 0;
+            }
           }
 
           .img {
             width: 100%;
             background: #fff;
             display: block;
-            box-shadow: 0px -1px 12px 0px rgba(50, 50, 50, 0.75);
+            //box-shadow: 0px -1px 12px 0px rgba(50, 50, 50, 0.75);
 
             &:first-child {
               margin-top: 0;
