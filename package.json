@@ -37,7 +37,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "node index.js"
+    "start": "node bin/www"
   },
   "repository": {
     "type": "git",
