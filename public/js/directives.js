@@ -347,3 +347,31 @@ directives.directive('animateHeight', function($timeout) {
     };
 });
 
+directives.directive('bgVideo', function($window, $sce) {
+    return {
+        link: function($scope, elem) {
+            elem = $(elem[0]);
+
+            var fn = function() {
+                if ($window.innerWidth > 1024 && !$scope.bgVideo)
+                    $scope.bgVideo = [
+                        {
+                            url: $sce.trustAsResourceUrl('http://static-p.iuqo.com/media/home/home/video/cloud.mp4'),
+                            type: 'video/mp4'
+                        }
+                    ];
+                else
+                    $scope.bgVideo = false;
+            }
+
+            $(window).resize(function() {
+                $scope.$apply(function() {
+                    fn();
+                });
+            });
+
+            fn();
+        }
+    };
+});
+

@@ -62,7 +62,7 @@ body {
 }
 
 body {
-  //overflow: hidden;
+  overflow: hidden;
 }
 
 .wrapper {
@@ -85,6 +85,10 @@ body {
       height: 100%;
       z-index: -1;
       overflow: hidden;
+
+      &.no-video {
+        background: url(/images/bg.png);
+      }
     }
 
     .bg-video {
