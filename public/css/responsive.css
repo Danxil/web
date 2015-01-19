@@ -1,3 +1,8 @@
+@media (min-height: 1000px) {
+  .wrapper .header .content {
+    margin-top: 200px;
+  }
+}
 @media (max-width: 1024px) {
   body {
     overflow: auto;
@@ -14,13 +19,16 @@
     overflow-x: auto;
     overflow-y: hidden;
   }
+  .wrapper .header .link .img {
+    height: 90px;
+  }
 }
 @media (max-width: 800px) {
   .wrapper .header .content {
     margin-top: 50px;
   }
   .wrapper .header .link .img {
-    height: 50px;
+    height: 60px;
   }
   .wrapper .projects .list .item .project {
     width: 350px;

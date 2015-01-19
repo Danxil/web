@@ -293,6 +293,7 @@
 .animated {
   animation-duration: 1s;
   animation-fill-mode: both;
+  animation-delay: .3s;
 }
 .animated.infinite {
   animation-iteration-count: infinite;
