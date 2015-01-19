@@ -356,7 +356,7 @@ directives.directive('bgVideo', function($window, $sce) {
                 if ($window.innerWidth > 1024 && !$scope.bgVideo)
                     $scope.bgVideo = [
                         {
-                            url: $sce.trustAsResourceUrl('http://static-p.iuqo.com/media/home/home/video/cloud.mp4'),
+                            url: $sce.trustAsResourceUrl('/videos/cloud.mp4'),
                             type: 'video/mp4'
                         }
                     ];
