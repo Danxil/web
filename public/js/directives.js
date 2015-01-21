@@ -358,6 +358,10 @@ directives.directive('bgVideo', function($window, $sce) {
                         {
                             url: $sce.trustAsResourceUrl('/videos/cloud.mp4'),
                             type: 'video/mp4'
+                        },
+                        {
+                            url: $sce.trustAsResourceUrl('/videos/cloud.webm'),
+                            type: 'video/webm'
                         }
                     ];
                 else
