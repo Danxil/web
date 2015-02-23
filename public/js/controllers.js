@@ -185,6 +185,10 @@ controllers.controller('adminController', ['$scope', '$compile', '$http', '$filt
                         }
 
 						$scope.linkPhantomWatcher = $scope.$watch('amendProjectData.linkPhantom', function (newValue, oldValue) {
+							if (!$scope.amendProjectData)
+								return;
+
+
 							if (newValue && !oldValue)
 								$scope.amendProjectData.links.push(newValue)
 
@@ -199,6 +203,10 @@ controllers.controller('adminController', ['$scope', '$compile', '$http', '$filt
 						});
 
 						$scope.shotPhantomWatcher = $scope.$watch('editProjectData.shotPhantom', function (newValue, oldValue) {
+							if (!$scope.editProjectData)
+								return;
+
+
 							if (newValue && !oldValue)
 								$scope.editProjectData.shots.push(newValue)
 
