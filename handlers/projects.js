@@ -101,14 +101,11 @@ createScreenshot = function(url, options, callback) {
             page.set('viewportSize', viewportSize);
 
             page.open(url, function (status) {
+                page.render(dest, function() {
+                    ph.exit();
 
-                setTimeout(function() {
-                    page.render(dest, function() {
-                        ph.exit();
-
-                        callback(shot);
-                    });
-                }, 1000);
+                    callback(shot);
+                });
             });
         });
     });
