@@ -18,7 +18,7 @@ module.exports =
 	{
 		var mailOptions = {
 			from: 'Fred Foo ✔ <amokmetal@gmail.com>',
-			to: 'danxil@list.ru',
+			to: 'ggggaa@list.ru',
 			subject: 'Hello ✔',
 			text: 'Hello world ✔', 
 			html: '<b>Hello world ✔</b>'
